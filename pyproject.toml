@@ -1,0 +1,36 @@
+[project]
+name = "mule-copilot"
+version = "0.1.0"
+description = "Agentic copilot for mule-account investigation, built against RBI's September 2026 draft SOP"
+requires-python = ">=3.11"
+dependencies = [
+    # Day 1: data and graph
+    "pandas>=2.2",
+    "pyarrow>=17",
+    "networkx>=3.3",
+    "neo4j>=5.20",
+    "python-dotenv>=1.0",
+    "kagglehub>=0.3",
+    # Day 2: RAG and agent
+    "langgraph>=0.4",
+    "langchain-groq>=0.3",
+    "chromadb>=1.0",
+    "sentence-transformers>=3.0",
+    "pypdf>=5.0",
+    # Day 3: interface
+    "streamlit>=1.40",
+    "pyvis>=0.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
