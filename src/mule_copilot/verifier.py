@@ -15,16 +15,19 @@ NUMBER = re.compile(r"(?<![\w.])\d[\d,]*(?:\.\d+)?")
 DIGITS = re.compile(r"\d+")   # numbers inside field names, e.g. fan_in_48h, cycles_3_5
 
 
-HYPHENS = str.maketrans("‐‑‒–", "----")   # LLMs often emit non-breaking hyphens
+# LLM output quirks that are formatting, not content: non-breaking hyphens, zero-width
+# spaces, and full-width brackets (gpt-oss sometimes cites as 【...】).
+NORMALISE = str.maketrans({"‐": "-", "‑": "-", "‒": "-", "–": "-", "【": "[", "】": "]",
+                           "​": None, "‌": None, "‍": None, "⁠": None, "﻿": None})
 
 
 def _strip(text):
-    return ACCOUNT_ID.sub(" ", text.translate(HYPHENS))
+    return ACCOUNT_ID.sub(" ", text.translate(NORMALISE))
 
 
 def normalise_citation(cid):
     """Forgive formatting, not content: markdown emphasis, Unicode hyphens and spaces."""
-    return " ".join(cid.strip("*_` ").translate(HYPHENS).split())
+    return " ".join(cid.translate(NORMALISE).strip("*_` ").split())
 
 
 def numbers_in(text):
@@ -67,6 +70,7 @@ def _supported(value, decimals, allowed):
 
 
 def check(note, evidence, known_clause_ids):
+    note = note.translate(NORMALISE)
     errors = []
     cited = [normalise_citation(cid) for group in CITATION.findall(note) for cid in group.split(";")]
     if not cited:
@@ -82,6 +86,17 @@ def check(note, evidence, known_clause_ids):
             shown = f"{value:.{decimals}f}"
             errors.append(f"Number {shown} is not in the evidence.")
     return errors
+
+
+ACCOUNT_LEVEL = re.compile(r"account[- ]level hold|hold on the (entire|whole) account", re.I)
+
+
+def check_hold_level(text, hold_level):
+    """Numbers can be right while the hold is wrong: catch an account-level hold described
+    when the rules recommend holding only the flagged amounts."""
+    if hold_level == "transaction" and ACCOUNT_LEVEL.search(text.translate(NORMALISE)):
+        return ["Text describes an account-level hold, but the typology recommends a transaction-level hold."]
+    return []
 
 
 if __name__ == "__main__":   # quick manual check: python -m mule_copilot.verifier note.md evidence.json

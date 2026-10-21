@@ -12,7 +12,8 @@ approval, then customer notice, police (NCRP) reference or STR draft, all logged
 - [x] Day 1: synthetic transaction graph in Neo4j with mule-pattern features, frozen eval set
 - [x] Day 2: clause-level RAG over the RBI texts, typology rules, LangGraph case-note agent with
       verifier and officer review
-- [ ] Day 3: SOP clock, explanation assessor, drafted documents, MIS log, Streamlit
+- [x] Day 3: full SOP workflow with the SOP clock, explanation assessor, customer notice, police
+      reference and STR drafts, SQLite MIS log, Streamlit screen
 - [ ] Day 4: evals, production design, demo
 
 ## Setup
@@ -38,7 +39,7 @@ powershell -ExecutionPolicy Bypass -File scripts\neo4j.ps1 start
 .venv\Scripts\python -m mule_copilot.features     # fan-in/out, pass-through, rapid forwarding, cycles, Louvain
 .venv\Scripts\python -m mule_copilot.eval_set     # frozen eval set + simulated NCRP "reported" list
 .venv\Scripts\python -m mule_copilot.graph_store  # load into Neo4j
-.venv\Scripts\python -m mule_copilot.profile <account_id>
+.venv\Scripts\python -m mule_copilot.risk_profile <account_id>
 ```
 
 ## Run the copilot
@@ -46,12 +47,15 @@ powershell -ExecutionPolicy Bypass -File scripts\neo4j.ps1 start
 ```powershell
 .venv\Scripts\python -m mule_copilot.corpus                      # fetch RBI texts, split into clauses, embed
 .venv\Scripts\python -m mule_copilot.corpus "time to submit explanation"   # try retrieval
-.venv\Scripts\python -m mule_copilot.agent 223-811EDA940         # case note, then officer approve/edit/reject
-.venv\Scripts\python -m mule_copilot.agent 223-811EDA940 --auto-approve --no-linkage
+.venv\Scripts\streamlit run src\mule_copilot\app.py              # investigator screen
+.venv\Scripts\python -m mule_copilot.agent 223-811EDA940         # whole SOP in the terminal, prompts at each pause
+.venv\Scripts\python -m mule_copilot.agent 223-811EDA940 --auto --date 2026-11-02   # scripted run
+.venv\Scripts\python -m mule_copilot.agent 223-811EDA940 --note-only --no-linkage   # note only (evals)
 ```
 
 Notes land in `data/processed/notes/<account>.md`, with a `.json` beside each holding the evidence,
-cited clauses, every draft and its verifier errors, the officer's decision and the time taken.
+cited clauses, every draft and its verifier errors and the time taken. The MIS log is
+`data/processed/mis.sqlite`; LangGraph checkpoints are in `data/processed/checkpoints.sqlite`.
 
 ## Data
 
@@ -96,7 +100,7 @@ value (so 0 cycles ranks 0, and any cycle ranks above every background account).
 computed in Python (pandas, NetworkX) and written to Neo4j, so the Graph Data Science plugin is
 optional.
 
-Excerpt of `python -m mule_copilot.profile 223-811EDA940` (a cycle and fan-in pattern member):
+Excerpt of `python -m mule_copilot.risk_profile 223-811EDA940` (a cycle and fan-in pattern member):
 
 ```
 Feature                                  Value  Percentile
@@ -190,6 +194,60 @@ intake → evidence → typology → retrieve → draft → verify → officer r
   Example catch: a first draft summed several transfers into "≈ USD 115,000", a number in no record.
 - **Officer review**: LangGraph `interrupt()`; the officer approves, edits or rejects, and the
   decision is stored with the case.
+- **Hold-level check**: a note (or customer notice) that describes an account-level hold when the
+  rules recommend holding only the flagged amounts is sent back too.
+
+## SOP workflow
+
+One LangGraph graph per case, from flag to closure. Square brackets are pauses; the case resumes
+from a SQLite checkpoint, so weeks can pass between steps. Each resume carries the date it happens on.
+
+```
+note ─[officer: review]─┬─ no hold / rejected ─────────────────────────────────────────── closed
+                        └─ hold → customer notice ─[customer: explanation]─ assess ─[officer: decide]
+                                ┌──────────────────────────────────────────────────────────┘
+                                ├─ remove ──────────────────────────────────── hold removed, closed
+                                └─ continue → police reference + STR ─[officer: approve]─ refer
+                                       ─[police: instruction?]─┬─ yes → act on it, closed
+                                                               └─ no  → hold removed on day 31, closed
+```
+
+**SOP clock** (`clock.py`, plain code, unit-tested against the SOP's own numbers):
+
+| Deadline | Rule | SOP |
+|---|---|---|
+| Notify customer | same day if digital, else by end of next day | para 4 step 2 |
+| Explanation due | hold + 20 days | para 5 step 3 |
+| Bank decision due | explanation + 10 days, or hold + 30 if none arrives in time | para 5 step 4 |
+| Release if police don't instruct | reference + 30 days ("the 31st day", counting the reference date as day 1) | para 5 step 6 |
+| Maximum hold | hold + 60 days | para 5 |
+
+The "31st day" reading is the one that keeps the SOP's own sum (up to 30 days for steps 3 and 4, plus
+up to 30 for steps 5 and 6) within 60. Late explanations and late decisions are logged as breaches.
+
+**Explanation assessor**: compares the customer's explanation with the graph evidence and
+recommends remove or continue, listing what the evidence supports and what it leaves unexplained.
+It knows the SOP's definition of a mule account ("on behalf of another person"), so "my friend's
+account was blocked, so I paid his suppliers" does not pass however well the numbers match.
+Advisory only; the officer decides.
+
+**Documents**: the customer notice (reasons, how to get the hold removed, officer contact,
+grievance route), police reference via NCRP-CFCFRMS, and STR grounds of suspicion are drafted by the
+LLM and verified like the note. Customer documents are also checked for any mention of an STR,
+FIU-IND or money laundering, because the fact of reporting is confidential (KYC Directions para 54).
+Removal and continuation notices are fixed templates.
+
+**MIS log** (`case_log.py`, SQLite): every step with its case date and actor (system, copilot,
+officer, customer, police), every document with its verifier result, and per-case deadlines, as
+SOP para 7 asks for.
+
+**Customer explanations for evals**: [`evals/explanations.csv`](evals/explanations.csv) has 15
+synthetic explanations. 8 fit their account's evidence (flagged clean accounts, expected: remove)
+and 7 do not (flagged laundering accounts, expected: continue), marked easy, medium or tricky.
+
+**Investigator screen** (`app.py`): case queue sorted by the next SOP deadline, an action panel for
+whichever pause the case is at, the case note, a graph of counterparties (reported accounts and
+cycles highlighted), documents, the MIS log and the evidence. Dates are simulated from the sidebar.
 
 ## Limitations
 
@@ -204,3 +262,7 @@ intake → evidence → typology → retrieve → draft → verify → officer r
   book. A real deployment would compare against KYC-declared income and occupation.
 - The linkage indicator relies on a simulated NCRP list built from labels (see above).
 - The SOP's ₹1,000 floor is not applied: IBM amounts are in mixed currencies, not rupees.
+- The verifier checks that every number exists in the evidence, not that it is attached to the right
+  label. One note gave the fan-in percentile next to the fan-out count. The Day 4 hand-check of
+  notes measures how often this happens.
+- Dates are simulated; the workflow does not wait on a real calendar or send real messages.

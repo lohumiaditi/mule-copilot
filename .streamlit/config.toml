@@ -1,0 +1,8 @@
+[server]
+# The file watcher walks every imported module, which makes transformers import all of
+# its lazy model modules on each rerun. Restart the app to pick up code changes instead.
+fileWatcherType = "none"
+headless = true
+
+[browser]
+gatherUsageStats = false

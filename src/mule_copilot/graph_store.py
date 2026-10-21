@@ -75,6 +75,36 @@ def transfers(account_id, limit=50):
     return [r.data() for r in records]
 
 
+def transfer_summary(account_id):
+    """Transfers in and out by payment format: counts, USD totals, distinct counterparties."""
+    query = """
+        MATCH (a:Account {id: $id})-[t:TRANSFER]-(other:Account)
+        WHERE other <> a
+        RETURN CASE WHEN startNode(t) = a THEN 'out' ELSE 'in' END AS direction,
+               t.payment_format AS format, count(t) AS transfers,
+               round(sum(t.amount_usd), 2) AS amount_usd, count(DISTINCT other) AS counterparties
+        ORDER BY direction, transfers DESC
+    """
+    with driver() as d:
+        records, _, _ = d.execute_query(query, id=account_id)
+    return [r.data() for r in records]
+
+
+def counterparties(account_id, limit=60):
+    """Direct counterparties with transfer counts and totals per direction, for the graph view."""
+    query = """
+        MATCH (a:Account {id: $id})-[t:TRANSFER]-(other:Account)
+        WHERE other <> a
+        RETURN CASE WHEN startNode(t) = a THEN 'out' ELSE 'in' END AS direction, other.id AS id,
+               coalesce(other.reported_ncrp, false) AS reported, count(t) AS transfers,
+               round(sum(t.amount_usd), 2) AS amount_usd
+        ORDER BY amount_usd DESC LIMIT $limit
+    """
+    with driver() as d:
+        records, _, _ = d.execute_query(query, id=account_id, limit=limit)
+    return [r.data() for r in records]
+
+
 def community_peers(account_id, limit=25):
     """Other in-scope accounts in the same Louvain community, busiest first."""
     query = """

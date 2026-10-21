@@ -15,6 +15,13 @@ TRANSACTIONS = DATA_PROCESSED / "transactions.parquet"
 LABELS = DATA_PROCESSED / "account_labels.parquet"
 FEATURES = DATA_PROCESSED / "account_features.parquet"
 CLAUSES = DATA_PROCESSED / "clauses.jsonl"
+MIS_DB = DATA_PROCESSED / "mis.sqlite"
+CHECKPOINTS_DB = DATA_PROCESSED / "checkpoints.sqlite"
+EXPLANATIONS = ROOT / "evals" / "explanations.csv"
+
+# Synthetic bank details for drafted documents. Not a real bank.
+BANK_NAME = "Example Bank Ltd (synthetic)"
+NODAL_OFFICER = "Nodal Officer, Mule Investigations Desk, Example Bank Ltd, nodal.officer@example.com"
 EVAL_ACCOUNTS = EVALS / "eval_accounts.csv"
 NCRP_REPORTED = EVALS / "ncrp_reported.csv"
 

@@ -18,6 +18,7 @@ dependencies = [
     "sentence-transformers>=3.0",
     "pypdf>=5.0",
     "beautifulsoup4>=4.12",
+    "langgraph-checkpoint-sqlite>=2.0",
     # Day 3: interface
     "streamlit>=1.40",
     "pyvis>=0.3",

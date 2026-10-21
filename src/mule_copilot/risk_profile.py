@@ -1,6 +1,6 @@
 """Mule-risk profile for one account, read from Neo4j.
 
-    python -m mule_copilot.profile 21174-800737690
+    python -m mule_copilot.risk_profile 21174-800737690
 """
 
 import sys

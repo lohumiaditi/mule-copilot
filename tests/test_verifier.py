@@ -34,6 +34,7 @@ def test_citation_formatting_is_forgiven_but_not_content():
     note = "Hold [**SOP Annex III para 4 step 1**] and [SOP Annex III para 5 step 3]."
     assert verifier.check(note, EVIDENCE, CLAUSES) == []
     assert "No clause is cited." in verifier.check("Hold **SOP Annex III para 4 step 1**.", EVIDENCE, CLAUSES)
+    assert verifier.check("Hold [​SOP Annex III para 4 step 1] 【SOP Annex III para 5 step 3】.", EVIDENCE, CLAUSES) == []
 
 
 def test_rounding_to_the_notes_own_precision_is_accepted():
