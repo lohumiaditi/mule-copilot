@@ -85,8 +85,8 @@ def draft(kind, ctx):
     spec = SPECS[kind]
     by_id = clauses_by_id()
     clauses = [{k: by_id[cid][k] for k in ("id", "title", "text")} for cid in spec["clauses"]]
-    user = (f"CONTEXT:\n{json.dumps(ctx, indent=1, default=str, ensure_ascii=False)}\n\n"
-            f"CLAUSES:\n{json.dumps(clauses, indent=1, ensure_ascii=False)}")
+    user = (f"CONTEXT:\n{json.dumps(ctx, separators=(',', ':'), default=str, ensure_ascii=False)}\n\n"
+            f"CLAUSES:\n{json.dumps(clauses, separators=(',', ':'), ensure_ascii=False)}")
     messages = [("system", f"You draft documents for a bank's money-mule investigation desk.\n\nTASK:\n{spec['task']}\n\n{COMMON}"),
                 ("user", user)]
     log = []

@@ -31,7 +31,8 @@ def run(tmp_path, monkeypatch):
     clauses = {cid: {"id": cid, "title": cid, "text": "", "source": "test"} for cid in ANCHORS}
     monkeypatch.setattr(corpus, "clauses_by_id", lambda: clauses)
     monkeypatch.setattr(corpus, "search", lambda *a, **k: [])
-    monkeypatch.setattr(agent, "chat", lambda: SimpleNamespace(invoke=lambda messages: SimpleNamespace(content=NOTE)))
+    reply = SimpleNamespace(content=NOTE, usage_metadata={"input_tokens": 100, "output_tokens": 50})
+    monkeypatch.setattr(agent, "chat", lambda: SimpleNamespace(invoke=lambda messages: reply))
     monkeypatch.setattr(documents, "draft", lambda kind, ctx: (f"{kind} draft", [], []))
     monkeypatch.setattr(assessor, "assess", lambda text, ev: {"recommendation": "remove", "reasons": "fits",
                                                               "consistent_with_evidence": [], "unexplained_or_contradicted": []})

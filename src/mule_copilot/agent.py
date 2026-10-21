@@ -101,6 +101,7 @@ class CaseState(TypedDict, total=False):
     errors: list
     error_log: list           # verifier errors per draft, for the verifier catch-rate eval
     drafts: int
+    tokens: dict              # LLM tokens spent on the case note (input, output)
     flagged: bool
     decision: dict            # officer's note review
     hold_date: str
@@ -168,7 +169,7 @@ def intake(state):
     case_log.update_case(state["account_id"], account_id=state["account_id"], opened_on=day, stage="investigation")
     case_log.log(state["account_id"], day, "Case opened", "system", "Account flagged by transaction monitoring")
     return {"facts": {k: account[k] for k in FACTS}, "date": day, "stage": "investigation",
-            "drafts": 0, "errors": [], "error_log": [], "flagged": False}
+            "drafts": 0, "errors": [], "error_log": [], "flagged": False, "tokens": {"input": 0, "output": 0}}
 
 
 def evidence(state):
@@ -197,15 +198,23 @@ def retrieve(state):
     return {"clauses": clauses[:MAX_CLAUSES]}
 
 
+def compact(obj):
+    """Minified JSON for prompts: the same facts in about a third fewer tokens."""
+    return json.dumps(obj, separators=(",", ":"), default=str, ensure_ascii=False)
+
+
 def draft(state):
-    user = (f"EVIDENCE:\n{json.dumps(_evidence(state), indent=1, default=str)}\n\n"
-            f"CLAUSES:\n{json.dumps(state['clauses'], indent=1, ensure_ascii=False)}")
+    user = f"EVIDENCE:\n{compact(_evidence(state))}\n\nCLAUSES:\n{compact(state['clauses'])}"
     messages = [("system", SYSTEM), ("user", user)]
     if state.get("errors"):
         messages += [("assistant", state["note"]),
                      ("user", "Your draft failed verification:\n- " + "\n- ".join(state["errors"])
                       + "\nRewrite the whole note and fix every problem.")]
-    return {"note": chat().invoke(messages).content.strip(), "drafts": state["drafts"] + 1}
+    reply = chat().invoke(messages)
+    usage = reply.usage_metadata or {}
+    tokens = {"input": state["tokens"]["input"] + usage.get("input_tokens", 0),
+              "output": state["tokens"]["output"] + usage.get("output_tokens", 0)}
+    return {"note": reply.content.strip(), "drafts": state["drafts"] + 1, "tokens": tokens}
 
 
 def verify(state):
@@ -455,7 +464,7 @@ def save_note(s, seconds):
     path = NOTES_DIR / f"{aid}.md"
     path.write_text(header + s["note"] + "\n\n" + FOOTER + "\n", encoding="utf-8")
     record = {k: s.get(k) for k in ("account_id", "use_linkage", "typology", "clauses", "errors", "error_log",
-                                     "drafts", "flagged")}
+                                     "drafts", "flagged", "tokens")}
     record.update(evidence=_evidence(s), seconds=round(seconds, 1))
     (NOTES_DIR / f"{aid}.json").write_text(json.dumps(record, indent=1, default=str, ensure_ascii=False), encoding="utf-8")
     return path

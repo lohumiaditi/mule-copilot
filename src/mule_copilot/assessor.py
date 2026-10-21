@@ -38,7 +38,7 @@ class Assessment(BaseModel):
 
 def assess(explanation, evidence):
     llm = chat().with_structured_output(Assessment, method="json_schema")
-    user = f"EVIDENCE:\n{json.dumps(evidence, indent=1, default=str)}\n\nCUSTOMER EXPLANATION:\n{explanation}"
+    user = f"EVIDENCE:\n{json.dumps(evidence, separators=(',', ':'), default=str)}\n\nCUSTOMER EXPLANATION:\n{explanation}"
     messages = [("system", SYSTEM), ("user", user)]
     try:
         return llm.invoke(messages).model_dump()

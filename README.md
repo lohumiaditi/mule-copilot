@@ -2,19 +2,67 @@
 
 An agentic copilot for mule-account investigation, built against RBI's September 2026 draft SOP
 (draft KYC Amendment Directions 2026, Annex III). Flagged account in, cited case note out, human
-approval, then customer notice, police (NCRP) reference or STR draft, all logged.
+approval, then customer notice, police (NCRP) reference or STR draft, all on the SOP's clock and
+all logged.
 
 > Built against a **draft**. The final directions may change; this is not a compliance claim.
 > Synthetic data only (IBM's public AML dataset). No bank data, code or process details are used.
 
-## Status
+## Why
 
-- [x] Day 1: synthetic transaction graph in Neo4j with mule-pattern features, frozen eval set
-- [x] Day 2: clause-level RAG over the RBI texts, typology rules, LangGraph case-note agent with
-      verifier and officer review
-- [x] Day 3: full SOP workflow with the SOP clock, explanation assessor, customer notice, police
-      reference and STR drafts, SQLite MIS log, Streamlit screen
-- [ ] Day 4: evals, production design, demo
+- **About ₹19,800 crore** reported lost to cyber fraud in India in 2025
+  ([I4C data via IANS](https://ianslive.in/indians-lose-over-rs-52976-crore-to-cyber-frauds-over-six-years-report--20260103154943)).
+- **Over 27 lakh** first-layer mule accounts identified through I4C's Suspect Registry by January 2026
+  ([The420.in](https://the420.in/?p=91261)).
+- **1 April 2027**: proposed start of RBI's SOP on suspected money mule accounts
+  ([draft](https://www.rbi.org.in/scripts/bs_viewcontent.aspx?Id=5170)). Every flag will need a
+  hold, a notice, a 20-day explanation window, a decision within 10 or 30 days, a police reference
+  or release, an MIS record and often an STR.
+
+## Results
+
+<!-- RESULTS -->
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph data[Data, built once]
+        K[IBM AML HI-Small<br/>Kaggle] --> I[ingest + features<br/>pandas, NetworkX]
+        I --> N[(Neo4j<br/>20k accounts<br/>141k transfers)]
+        R[RBI draft SOP +<br/>KYC Directions<br/>rbi.org.in] --> C[clause splitter] --> V[(Chroma<br/>42 clauses)]
+    end
+    subgraph case[LangGraph case workflow, one per flag]
+        E[evidence<br/>fixed Cypher] --> T[typology rules<br/>decide hold] --> RT[retrieve<br/>anchors + search] --> D[draft note<br/>gpt-oss-120b] --> VF[verifier<br/>plain code]
+        VF -->|once| D
+        VF --> H1{{officer}} --> HOLD[hold + notice] --> X{{customer<br/>explanation}} --> AS[assessor] --> H2{{officer<br/>decide}}
+        H2 --> REF[police ref + STR] --> H3{{officer}} --> L{{police<br/>instruction}}
+    end
+    N --> E
+    V --> RT
+    case --> MIS[(SQLite MIS log<br/>+ checkpoints)]
+    case --> UI[Streamlit<br/>investigator screen]
+```
+
+Hexagons are pauses where a person acts; the case resumes from its checkpoint, days later if need be.
+
+## SOP requirement to implementation
+
+| SOP (draft Annex III) / KYC Directions | Where |
+|---|---|
+| Para 3: suspected mule transaction, indicators (a) unusual for profile, (b) linkage to reported account | `typology.py`: five transaction-shape signals for (a), NCRP linkage for (b) |
+| Step 1: hold immediately; account-level hold only as last resort (para 6(ii)) | Hold level from the rules: 1 signal amounts only, 2+ account level; `place_hold` |
+| Step 2: notify with reasons, removal process, officer contact | `documents.py` customer notice, verified; grievance route from para 8 |
+| Step 3: 20 days to explain | `clock.py`; pause for the customer's explanation |
+| Step 4: decide within 10 days of explanation (30 if none); remove, or continue and refer via NCRP | `assessor.py` advises; officer decides; police reference drafted |
+| Steps 5 and 6: follow police instruction, else release on the 31st day; 60-day cap | Pause for police; `clock.py` release date |
+| Para 6: objective parameters that minimise flagging genuine accounts | Thresholds from the bank's book, not labels; fast route to clear honest customers |
+| Para 7: centralised MIS, records, STRs continue | `case_log.py`; STR narrative drafted at referral |
+| KYC para 68: mule accounts, STR filing | STR narrative; `KYC-CB-2025 para 68` cited |
+| KYC para 54: reporting is confidential | Customer documents checked for any mention of an STR or FIU-IND |
+
+More: [production design (one page)](docs/production-design.md) · [demo script](docs/demo-script.md) ·
+[eval details](evals/results.md)
 
 ## Setup
 
@@ -173,8 +221,8 @@ On held-out accounts (eval set and reported accounts excluded):
 | **Account-level hold**, without linkage | 18.1% | 1.6% |
 | **Account-level hold**, with linkage | 43.8% | 2.0% |
 
-Transaction-level holds are the triage tier: the customer's explanation (Day 3) is what clears
-honest customers quickly. Account-level holds are rare on clean accounts.
+Transaction-level holds are the triage tier: the customer's explanation is what clears honest
+customers quickly. Account-level holds are rare on clean accounts.
 
 ## Case-note agent
 
@@ -266,3 +314,15 @@ cycles highlighted), documents, the MIS log and the evidence. Dates are simulate
   label. One note gave the fan-in percentile next to the fan-out count. The Day 4 hand-check of
   notes measures how often this happens.
 - Dates are simulated; the workflow does not wait on a real calendar or send real messages.
+
+## Next
+
+- Shared identifiers (phone, device, IP, address) in the graph: the strongest real-world mule
+  signal, absent from IBM's data.
+- Compare against the KYC-declared profile (income, occupation) for SOP indicator (a).
+- Time-respecting cycles, and the SOP's ₹1,000 floor once amounts are in rupees.
+- A learned risk score calibrated on confirmed cases, with the current rules kept as guardrails.
+- Check that each number in a note sits next to the right label, not just that it exists.
+- A supervisor with specialist agents (evidence, typology, drafting, assessment).
+- Free-form questions over the graph (text-to-Cypher), read-only and logged.
+- Tracing and evaluation dashboards (LangSmith or Langfuse).
