@@ -6,6 +6,11 @@ stratified across pattern types.
 Clean: in-scope accounts with no laundering transactions; half random, half drawn
 from the busiest decile so the set includes hard negatives.
 
+Also writes a simulated NCRP "already reported" list for the SOP's linkage indicator:
+a random 30% of pattern accounts, never including an eval account. It uses labels on
+purpose, standing in for earlier victim complaints; evals report results with and
+without it.
+
     python -m mule_copilot.eval_set
 """
 
@@ -14,6 +19,7 @@ import pandas as pd
 from mule_copilot import config
 
 N_LAUNDERING, N_CLEAN = 20, 10
+REPORTED_SHARE = 0.3
 
 
 def pick(labels, feats):
@@ -38,13 +44,24 @@ def pick(labels, feats):
     return pd.concat([laundering, clean])[cols].reset_index(drop=True)
 
 
+def pick_reported(labels, eval_ids):
+    pool = labels[labels.in_scope & labels.pattern_types.notna() & ~labels.account_id.isin(eval_ids)]
+    return pool.sample(frac=REPORTED_SHARE, random_state=config.SEED)[["account_id"]].sort_values("account_id")
+
+
 def main():
     labels = pd.read_parquet(config.LABELS)
-    feats = pd.read_parquet(config.FEATURES)
-    eval_set = pick(labels, feats)
     config.EVALS.mkdir(exist_ok=True)
-    eval_set.to_csv(config.EVAL_ACCOUNTS, index=False)
+    if config.EVAL_ACCOUNTS.exists():
+        eval_set = pd.read_csv(config.EVAL_ACCOUNTS)   # frozen: never re-pick
+    else:
+        eval_set = pick(labels, pd.read_parquet(config.FEATURES))
+        eval_set.to_csv(config.EVAL_ACCOUNTS, index=False)
     print(eval_set.to_string())
+
+    reported = pick_reported(labels, set(eval_set.account_id))
+    reported.to_csv(config.NCRP_REPORTED, index=False)
+    print(f"\nSimulated NCRP 'already reported' list: {len(reported):,} accounts -> {config.NCRP_REPORTED}")
 
 
 if __name__ == "__main__":

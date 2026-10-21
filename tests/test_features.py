@@ -22,6 +22,26 @@ def test_max_distinct_in_window_drops_old_transfers():
     assert features.max_distinct_in_window(times, ["a", "b", "c"]) == 2
 
 
+def _h(hours):
+    return T0 + pd.Timedelta(hours=hours)
+
+
+def test_rapid_forward_counts_only_money_forwarded_within_24h():
+    events = [(_h(0), 100.0), (_h(2), -60.0), (_h(30), -40.0)]
+    assert features.rapid_forward_share(events) == 0.6
+
+
+def test_rapid_forward_matches_oldest_inflow_first():
+    # The hour-48 outflow spends the stale hour-0 lot first, so only 50 of the fresh 100 is fast.
+    events = [(_h(0), 50.0), (_h(40), 100.0), (_h(48), -100.0)]
+    assert features.rapid_forward_share(events) == 50 / 150
+
+
+def test_rapid_forward_ignores_outflows_with_no_prior_inflow():
+    events = [(_h(0), -500.0), (_h(1), 100.0)]
+    assert features.rapid_forward_share(events) == 0.0
+
+
 def test_compute_mule_like_pass_through_and_cycle():
     tx = _tx([
         ("s1", "mule", 0, 100), ("s2", "mule", 1, 100), ("s3", "mule", 2, 100),
@@ -36,6 +56,7 @@ def test_compute_mule_like_pass_through_and_cycle():
     assert f.loc["mule", "fan_out_48h"] == 2
     assert f.loc["mule", "pass_through_ratio"] == round(290 / 310, 4)
     assert f.loc["mule", "cycles_3_5"] == 1
+    assert f.loc["mule", "rapid_forward_24h"] == round(290 / 310, 4)
     assert f.loc["s1", "cycles_3_5"] == 0
     assert f.loc["mule", "fan_in_48h_pctl"] == round(6 / 7 * 100, 1)   # above the 6 other accounts
     assert f.loc["s1", "cycles_3_5_pctl"] == 0.0

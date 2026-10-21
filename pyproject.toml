@@ -17,6 +17,7 @@ dependencies = [
     "chromadb>=1.0",
     "sentence-transformers>=3.0",
     "pypdf>=5.0",
+    "beautifulsoup4>=4.12",
     # Day 3: interface
     "streamlit>=1.40",
     "pyvis>=0.3",

@@ -2,6 +2,7 @@
 
     fan_in_48h / fan_out_48h   most distinct senders / receivers in any 48-hour window
     pass_through_ratio         min(in, out) / max(in, out) in USD; 1.0 = all money in went out
+    rapid_forward_24h          share of inbound USD sent out again within 24 hours (FIFO matching)
     cycles_3_5                 directed simple cycles of length 3 to 5 through the account
     community_id / _size       Louvain community on the undirected transfer graph
 
@@ -20,7 +21,8 @@ import pandas as pd
 from mule_copilot import config
 
 WINDOW = pd.Timedelta(hours=48)
-RANKED = ["fan_in_48h", "fan_out_48h", "pass_through_ratio", "cycles_3_5", "n_tx_in", "n_tx_out"]
+FORWARD_WINDOW = pd.Timedelta(hours=24)
+RANKED = ["fan_in_48h", "fan_out_48h", "pass_through_ratio", "rapid_forward_24h", "cycles_3_5", "n_tx_in", "n_tx_out"]
 
 
 def max_distinct_in_window(times, others):
@@ -42,6 +44,42 @@ def fan_48h(tx, account_col, other_col):
     ordered = tx.sort_values("ts")
     return ordered.groupby(account_col).apply(
         lambda g: max_distinct_in_window(g.ts.tolist(), g[other_col].tolist()), include_groups=False
+    )
+
+
+def rapid_forward_share(events):
+    """Share of inbound money sent out again within FORWARD_WINDOW.
+
+    events: (ts, usd) sorted by time, positive = inbound, negative = outbound. Each
+    outbound amount is matched to the oldest unspent inbound amounts first (FIFO).
+    Outflows with no earlier inflow (money already in the account) match nothing.
+    """
+    lots, total_in, fast = deque(), 0.0, 0.0
+    for t, usd in events:
+        if usd > 0:
+            lots.append([t, usd])
+            total_in += usd
+            continue
+        need = -usd
+        while need > 0 and lots:
+            lot = lots[0]
+            used = min(need, lot[1])
+            if t - lot[0] <= FORWARD_WINDOW:
+                fast += used
+            lot[1] -= used
+            need -= used
+            if lot[1] <= 0:
+                lots.popleft()
+    return fast / total_in if total_in else 0.0
+
+
+def rapid_forward(tx):
+    inbound = pd.DataFrame({"account": tx.dst, "ts": tx.ts, "usd": tx.amount_usd, "order": 0})
+    outbound = pd.DataFrame({"account": tx.src, "ts": tx.ts, "usd": -tx.amount_usd, "order": 1})
+    # Same-minute in and out: count the inflow first, so it can be forwarded.
+    events = pd.concat([inbound, outbound]).sort_values(["account", "ts", "order"])
+    return events.groupby("account").apply(
+        lambda g: round(rapid_forward_share(zip(g.ts, g.usd)), 4), include_groups=False
     )
 
 
@@ -70,6 +108,8 @@ def compute(tx, accounts):
     lo = feats[["total_in_usd", "total_out_usd"]].min(axis=1)
     hi = feats[["total_in_usd", "total_out_usd"]].max(axis=1)
     feats["pass_through_ratio"] = (lo / hi.where(hi > 0)).fillna(0).round(4)
+    feats["rapid_forward_24h"] = rapid_forward(tx)
+    feats["rapid_forward_24h"] = feats.rapid_forward_24h.fillna(0)
 
     first, last = tx.groupby("src").ts.agg(["min", "max"]), tx.groupby("dst").ts.agg(["min", "max"])
     feats["first_seen"] = pd.concat([first["min"], last["min"]], axis=1).min(axis=1)

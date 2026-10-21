@@ -1,6 +1,7 @@
 """Neo4j: load the subsampled graph, and the fixed Cypher queries the agent uses.
 
-Only transactions and computed features go in. Ground-truth labels stay on disk.
+Only transactions, computed features and the simulated NCRP "already reported" flag
+go in. Ground-truth labels stay on disk.
 
     python -m mule_copilot.graph_store   # (re)load the graph
 """
@@ -22,7 +23,7 @@ def _batches(records):
         yield records[i:i + BATCH]
 
 
-def load(feats, tx):
+def load(feats, tx, reported_ids=()):
     feats = feats.assign(first_seen=feats.first_seen.astype(str), last_seen=feats.last_seen.astype(str))
     tx = tx.assign(ts=tx.ts.dt.strftime("%Y-%m-%dT%H:%M:%S"))
     accounts = feats.rename(columns={"account_id": "id"}).to_dict("records")
@@ -34,6 +35,7 @@ def load(feats, tx):
         s.run("CREATE CONSTRAINT account_id IF NOT EXISTS FOR (a:Account) REQUIRE a.id IS UNIQUE")
         for batch in _batches(accounts):
             s.run("UNWIND $rows AS row MERGE (a:Account {id: row.id}) SET a += row", rows=batch)
+        s.run("UNWIND $ids AS id MATCH (a:Account {id: id}) SET a.reported_ncrp = true", ids=list(reported_ids))
         for batch in _batches(transfers):
             s.run(
                 """
@@ -99,11 +101,26 @@ def cycle_paths(account_id, limit=5):
     return [r["accounts"] for r in records]
 
 
+def reported_links(account_id, limit=10):
+    """Counterparties already on the (simulated) NCRP reported list: SOP indicator (b)."""
+    query = """
+        MATCH (a:Account {id: $id})-[t:TRANSFER]-(r:Account {reported_ncrp: true})
+        WHERE r <> a
+        RETURN r.id AS id, count(t) AS transfers, round(sum(t.amount_usd), 2) AS amount_usd
+        ORDER BY transfers DESC LIMIT $limit
+    """
+    with driver() as d:
+        records, _, _ = d.execute_query(query, id=account_id, limit=limit)
+    return [r.data() for r in records]
+
+
 def main():
     feats = pd.read_parquet(config.FEATURES)
     tx = pd.read_parquet(config.TRANSACTIONS)
-    n, m = load(feats, tx[tx.src != tx.dst])
-    print(f"Loaded {n:,} Account nodes and {m:,} TRANSFER edges into {config.NEO4J_URI}")
+    reported = pd.read_csv(config.NCRP_REPORTED).account_id if config.NCRP_REPORTED.exists() else []
+    n, m = load(feats, tx[tx.src != tx.dst], reported)
+    print(f"Loaded {n:,} Account nodes and {m:,} TRANSFER edges into {config.NEO4J_URI} "
+          f"({len(reported):,} flagged as already reported)")
 
 
 if __name__ == "__main__":
