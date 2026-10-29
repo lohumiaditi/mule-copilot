@@ -1,0 +1,333 @@
+{
+ "account_id": "212-80835AF20",
+ "use_linkage": true,
+ "typology": {
+  "signals": [
+   {
+    "name": "dispersal",
+    "description": "Many distinct receivers within 48 hours",
+    "sop_indicator": "a",
+    "values": {
+     "fan_out_48h": 5,
+     "fan_out_48h_pctl": 95.1
+    }
+   }
+  ],
+  "n_signals": 1,
+  "n_rules": 6,
+  "thresholds": {
+   "top_percentile": 95.0,
+   "pass_through_min": 0.8,
+   "cycles_min": 1
+  },
+  "hold_level": "transaction",
+  "confidence": "low",
+  "anchor_clauses": [
+   "SOP Annex III para 4 step 1",
+   "SOP Annex III para 4 step 2",
+   "SOP Annex III para 5 step 3",
+   "SOP Annex III para 3 (Suspected Money Mule Transaction)",
+   "KYC-CB-2025 para 40"
+  ]
+ },
+ "clauses": [
+  {
+   "id": "SOP Annex III para 4 step 1",
+   "title": "Procedure and Timeline for Temporary Debit Hold, step 1",
+   "text": "The bank shall place a Temporary Debit Hold on the Suspected Money Mule Transaction or, if the account is a Suspected Money Mule Account, on the entire account. Timeline: Immediately",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "SOP Annex III para 4 step 2",
+   "title": "Procedure and Timeline for Temporary Debit Hold, step 2",
+   "text": "The bank shall notify the account holder of the Temporary Debit Hold, stating reasons, the process for removal, and the concerned officer's contact details, through digital mode (if mobile number / e-mail is on record) or physical mode. Timeline: On putting the temporary debit hold, the bank shall immediately notify the account holder, if communicating through digital mode, otherwise by EOD of the next day.",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "SOP Annex III para 5 step 3",
+   "title": "Procedure and Timeline for Removal of Temporary Debit Hold, step 3",
+   "text": "The bank shall seek the explanation / justification on the genuineness of the transaction / account from the account holder. Timeline: The bank shall give 20 days’ time from the date of Temporary Debit Hold to the account holder for submission of the explanation / justification.",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "SOP Annex III para 3 (Suspected Money Mule Transaction)",
+   "title": "Definition: Suspected Money Mule Transaction",
+   "text": "“Suspected Money Mule Transaction” means a transaction of ₹1000 and above, flagged by the bank's transaction-monitoring systems (including AI / ML-based tools), as suspected to be proceeds of money mule activity or cyber-enabled financial fraud, based on indicators such as being unusual for or disproportionate to the account holder's declared profile; or having linkage to an account already reported as money mule or fraudulent.",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "KYC-CB-2025 para 40",
+   "title": "Transactions that need close monitoring",
+   "text": "40. Without prejudice to the generality of factors that call for close monitoring, the bank shall necessarily monitor the following types of transactions: (1) Large and complex transactions including RTGS transactions, and those with unusual patterns, inconsistent with the normal and expected activity of the customer, which have no apparent economic rationale or legitimate purpose. (2) Transactions which exceed the thresholds prescribed for specific categories of accounts. (3) High account turnover inconsistent with the size of the balance maintained. (4) Deposit of third-party cheques, drafts, etc. in the existing and newly opened accounts followed by cash withdrawals for large amounts. For ongoing due diligence, the bank may consider adopting appropriate innovations including artificial intelligence and machine learning (AI and ML) technologies to support effective monitoring.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  },
+  {
+   "id": "KYC-CB-2025 para 5(1)(xviii)",
+   "title": "Definition: Suspicious transaction",
+   "text": "(xviii) ‘Suspicious transaction’ means a ‘transaction’ as defined below, including an attempted transaction, whether or not made in cash, which, to a person acting in good faith: (a) gives rise to a reasonable ground of suspicion that it may involve proceeds of an offence specified in the Schedule to the Act, regardless of the value involved; or (b) appears to be made in circumstances of unusual or unjustified complexity; or (c) appears to have no economic rationale or bona fide purpose; or (d) gives rise to a reasonable ground of suspicion that it may involve financing of the activities relating to terrorism. Explanation: Transaction involving financing of the activities relating to terrorism includes transaction involving funds that the bank suspects are linked or related to, or to be used for terrorism, terrorist acts or by a terrorist, terrorist organisation or those who finance or are attempting to finance terrorism.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  },
+  {
+   "id": "KYC-CB-2025 para 68",
+   "title": "Operation of Bank Accounts and Money Mules",
+   "text": "68. Operation of Bank Accounts and Money Mules: The bank shall strictly adhere to the instructions on opening of accounts and monitoring of transactions, to minimise the operations of ‘Money Mules’ that are used to launder the proceeds of fraud schemes (e.g., phishing and identity theft) by criminals who gain illegal access to deposit accounts by recruiting third parties that act as ‘money mules’. The bank shall undertake diligence measures and meticulous monitoring to identify accounts which are operated as Money Mules and take appropriate action, including reporting of suspicious transactions to FIU-IND. Further, if it is established that an account opened and operated is that of a Money Mule, but STR was not filed by the concerned bank, it shall then be deemed that the bank has not complied with these directions.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  }
+ ],
+ "errors": [],
+ "error_log": [
+  {
+   "draft": 1,
+   "note": "## Account summary\n- **Account ID:** 212-80835AF20  \n- **First seen:** 2022-09-01 02:52:00  \n- **Last seen:** 2022-09-10 06:36:00  \n- **Inbound transactions:** 34 (total USD 12,911.59)  \n- **Outbound transactions:** 48 (total USD 15,671,292.15)  \n- **Distinct senders:** 2  \n- **Distinct receivers:** 5  \n- **Fan‑out in 48 h:** 5 (95.4 percentile)  \n- **Pass‑through ratio:** 0.0008 (55.4 percentile)  \n- **Rapid‑forward 24 h:** 0.8709 (94.5 percentile)  \n\n## Evidence\n- **Fan‑out 48 h:** 5, which places the account in the 95.4 percentile of accounts by distinct receivers within 48 hours.  \n- **Pass‑through ratio:** 0.0008 (55.4 percentile).  \n- **Rapid‑forward 24 h:** 0.8709 (94.5 percentile).  \n- **Cycles (3‑5):** 0.  \n- **Transfer summary (selected):**  \n  - Outbound ACH transfers: 7 transfers, total USD 11,885,489.46 to a single counter‑party.  \n  - Outbound Cheque transfers: 24 transfers, total USD 3,769,002.64 to 5 distinct receivers.  \n  - Outbound Credit‑Card transfers: 15 transfers, total USD 16,706.76 to 3 distinct receivers.  \n- **Recent transfers (excerpt):** multiple outbound payments to different counterparties (e.g., 122545‑80875DDB0, 23501‑808C727B0, 22155‑808387C30) within a 48‑hour window.  \n\n## Patterns matched\n- **Dispersal** – “Many distinct receivers within 48 hours” (fan‑out 48 h = 5, fan‑out 48 h percentile = 95.1) – triggered 1 signal.  \n\n## Red flags and SOP basis\n| Red‑flag (signal) | Value | Threshold / SOP reference |\n|-------------------|-------|---------------------------|\n| Dispersal (many distinct receivers) | fan‑out 48 h = 5 (95.1 percentile) | The high fan‑out meets the “unusual pattern” concern under **KYC‑CB‑2025 para 40** which requires close monitoring of transactions with unusual patterns [​KYC-CB-2025 para 40]. In addition, the SOP mandates a Temporary Debit Hold on suspected money‑mule activity [​SOP Annex III para 4 step 1] and immediate notification to the account holder [​SOP Annex III para 4 step 2]. The bank must seek an explanation within 20 days [​SOP Annex III para 5 step 3]. |\n\n*All anchor clauses have been referenced as required:*  \n- **SOP Annex III para 4 step 1** – placement of Temporary Debit Hold.  \n- **SOP Annex III para 4 step 2** – notification of the hold.  \n- **SOP Annex III para 5 step 3** – request for explanation/remediation.  \n- **SOP Annex III para 3 (Suspected Money Mule Transaction)** – definition of a suspected money‑mule transaction.  \n- **KYC-CB-2025 para 40** – monitoring of unusual transaction patterns.  \n\n## Recommended hold level\n**transaction** [​SOP Annex III para 4 step 1]  \n\n## Confidence\n**low** [​SOP Annex III para 5 step 3]",
+   "errors": [
+    "Number 95.4 is not in the evidence."
+   ]
+  },
+  {
+   "draft": 2,
+   "note": "## Account summary\n- **Account ID:** 212-80835AF20  \n- **First seen:** 2022-09-01 02:52:00  \n- **Last seen:** 2022-09-10 06:36:00  \n- **Inbound transactions:** 34 (total USD 12,911.59)  \n- **Outbound transactions:** 48 (total USD 15,671,292.15)  \n- **Distinct senders:** 2  \n- **Distinct receivers:** 5  \n- **Fan‑out in 48 h:** 5 (95.1 percentile)  \n- **Pass‑through ratio:** 0.0008 (55.4 percentile)  \n- **Rapid‑forward 24 h:** 0.8709 (94.5 percentile)  \n\n## Evidence\n- **Fan‑out 48 h:** 5, fan‑out 48 h percentile = 95.1.  \n- **Pass‑through ratio:** 0.0008, pass‑through ratio percentile = 55.4.  \n- **Rapid‑forward 24 h:** 0.8709, rapid‑forward 24 h percentile = 94.5.  \n- **Cycles (3‑5):** 0.  \n- **Transfer summary (selected):**  \n  - Outbound ACH: 7 transfers, total USD 11,885,489.46 to 1 counter‑party.  \n  - Outbound Cheque: 24 transfers, total USD 3,769,002.64 to 5 distinct receivers.  \n  - Outbound Credit‑Card: 15 transfers, total USD 16,706.76 to 3 distinct receivers.  \n- **Recent transfers (excerpt):** multiple outbound payments to different counterparties (e.g., 122545‑80875DDB0, 23501‑808C727B0, 22155‑808387C30) within a short time window.  \n\n## Patterns matched\n- **Dispersal** – “Many distinct receivers within 48 hours” (fan‑out 48 h = 5, fan‑out 48 h percentile = 95.1) – 1 signal triggered.  \n\n## Red flags and SOP basis\n| Red‑flag (signal) | Value | SOP / clause reference |\n|-------------------|-------|------------------------|\n| Dispersal (many distinct receivers) | fan‑out 48 h = 5 (95.1 percentile) | Unusual pattern flagged for close monitoring under **KYC-CB-2025 para 40** [​KYC-CB-2025 para 40]. The SOP requires a Temporary Debit Hold on a suspected money‑mule transaction [​SOP Annex III para 4 step 1], immediate notification to the holder [​SOP Annex III para 4 step 2], and a request for explanation within 20 days [​SOP Annex III para 5 step 3]. The definition of a suspected money‑mule transaction is provided in [​SOP Annex III para 3 (Suspected Money Mule Transaction)]. |\n\n*All anchor clauses have been cited as required.*  \n\n## Recommended hold level\n**transaction** [​SOP Annex III para 4 step 1]  \n\n## Confidence\n**low** [​SOP Annex III para 5 step 3]",
+   "errors": []
+  }
+ ],
+ "drafts": 2,
+ "flagged": false,
+ "tokens": {
+  "input": 6674,
+  "output": 2707
+ },
+ "evidence": {
+  "account": {
+   "id": "212-80835AF20",
+   "first_seen": "2022-09-01 02:52:00",
+   "last_seen": "2022-09-10 06:36:00",
+   "n_tx_in": 34,
+   "n_tx_out": 48,
+   "n_senders": 2,
+   "n_receivers": 5,
+   "total_in_usd": 12911.59,
+   "total_out_usd": 15671292.15,
+   "fan_in_48h": 2,
+   "fan_in_48h_pctl": 49.4,
+   "fan_out_48h": 5,
+   "fan_out_48h_pctl": 95.1,
+   "pass_through_ratio": 0.0008,
+   "pass_through_ratio_pctl": 55.4,
+   "rapid_forward_24h": 0.8709,
+   "rapid_forward_24h_pctl": 94.5,
+   "cycles_3_5": 0
+  },
+  "typology": {
+   "signals": [
+    {
+     "name": "dispersal",
+     "description": "Many distinct receivers within 48 hours",
+     "sop_indicator": "a",
+     "values": {
+      "fan_out_48h": 5,
+      "fan_out_48h_pctl": 95.1
+     }
+    }
+   ],
+   "n_signals": 1,
+   "n_rules": 6,
+   "thresholds": {
+    "top_percentile": 95.0,
+    "pass_through_min": 0.8,
+    "cycles_min": 1
+   },
+   "hold_level": "transaction",
+   "confidence": "low",
+   "anchor_clauses": [
+    "SOP Annex III para 4 step 1",
+    "SOP Annex III para 4 step 2",
+    "SOP Annex III para 5 step 3",
+    "SOP Annex III para 3 (Suspected Money Mule Transaction)",
+    "KYC-CB-2025 para 40"
+   ]
+  },
+  "recent_transfers": [
+   {
+    "direction": "in",
+    "counterparty": "211-8076869E0",
+    "ts": "2022-09-10T06:36:00Z",
+    "amount": 381.89,
+    "currency": "UK Pound",
+    "amount_usd": 493.27,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "211-8076869E0",
+    "ts": "2022-09-10T06:35:00Z",
+    "amount": 263.42,
+    "currency": "UK Pound",
+    "amount_usd": 340.25,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "out",
+    "counterparty": "122545-80875DDB0",
+    "ts": "2022-09-09T22:26:00Z",
+    "amount": 1064.56,
+    "currency": "UK Pound",
+    "amount_usd": 1375.05,
+    "format": "Cheque"
+   },
+   {
+    "direction": "out",
+    "counterparty": "122545-80875DDB0",
+    "ts": "2022-09-09T22:24:00Z",
+    "amount": 1240.72,
+    "currency": "UK Pound",
+    "amount_usd": 1602.58,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "out",
+    "counterparty": "23501-808C727B0",
+    "ts": "2022-09-09T11:20:00Z",
+    "amount": 1314535.15,
+    "currency": "UK Pound",
+    "amount_usd": 1697927.07,
+    "format": "ACH"
+   },
+   {
+    "direction": "out",
+    "counterparty": "23501-808C727B0",
+    "ts": "2022-09-09T11:03:00Z",
+    "amount": 410969.17,
+    "currency": "UK Pound",
+    "amount_usd": 530830.75,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "211-8076869E0",
+    "ts": "2022-09-09T08:50:00Z",
+    "amount": 381.89,
+    "currency": "UK Pound",
+    "amount_usd": 493.27,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "211-8076869E0",
+    "ts": "2022-09-09T08:38:00Z",
+    "amount": 263.42,
+    "currency": "UK Pound",
+    "amount_usd": 340.25,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "out",
+    "counterparty": "22155-808387C30",
+    "ts": "2022-09-09T02:23:00Z",
+    "amount": 92.12,
+    "currency": "UK Pound",
+    "amount_usd": 118.99,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "out",
+    "counterparty": "22155-808387C30",
+    "ts": "2022-09-09T02:05:00Z",
+    "amount": 1626.69,
+    "currency": "UK Pound",
+    "amount_usd": 2101.12,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "122047-808157020",
+    "ts": "2022-09-09T01:26:00Z",
+    "amount": 107.06,
+    "currency": "UK Pound",
+    "amount_usd": 138.28,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "122047-808157020",
+    "ts": "2022-09-09T01:20:00Z",
+    "amount": 399.09,
+    "currency": "UK Pound",
+    "amount_usd": 515.49,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "out",
+    "counterparty": "221765-8087C1DB0",
+    "ts": "2022-09-09T00:49:00Z",
+    "amount": 1541.48,
+    "currency": "UK Pound",
+    "amount_usd": 1991.06,
+    "format": "Cheque"
+   },
+   {
+    "direction": "out",
+    "counterparty": "221765-8087C1DB0",
+    "ts": "2022-09-09T00:45:00Z",
+    "amount": 36.11,
+    "currency": "UK Pound",
+    "amount_usd": 46.64,
+    "format": "Wire"
+   },
+   {
+    "direction": "in",
+    "counterparty": "211-8076869E0",
+    "ts": "2022-09-08T23:19:00Z",
+    "amount": 381.89,
+    "currency": "UK Pound",
+    "amount_usd": 493.27,
+    "format": "Cheque"
+   }
+  ],
+  "transfer_summary": [
+   {
+    "direction": "in",
+    "format": "Credit Card",
+    "transfers": 17,
+    "amount_usd": 7010.89,
+    "counterparties": 2
+   },
+   {
+    "direction": "in",
+    "format": "Cheque",
+    "transfers": 17,
+    "amount_usd": 5900.7,
+    "counterparties": 2
+   },
+   {
+    "direction": "out",
+    "format": "Cheque",
+    "transfers": 24,
+    "amount_usd": 3769002.64,
+    "counterparties": 5
+   },
+   {
+    "direction": "out",
+    "format": "Credit Card",
+    "transfers": 15,
+    "amount_usd": 16706.76,
+    "counterparties": 3
+   },
+   {
+    "direction": "out",
+    "format": "ACH",
+    "transfers": 7,
+    "amount_usd": 11885489.46,
+    "counterparties": 1
+   },
+   {
+    "direction": "out",
+    "format": "Wire",
+    "transfers": 2,
+    "amount_usd": 93.28,
+    "counterparties": 1
+   }
+  ],
+  "cycles": [],
+  "reported_counterparties": []
+ },
+ "seconds": 69.3
+}

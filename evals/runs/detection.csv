@@ -1,0 +1,31 @@
+account_id,label,selection,signals,hold_with_linkage,hold_without_linkage
+223-811EDA940,laundering,"pattern member, >=2 laundering tx",pass_through|round_tripping,account,account
+513-8027C1CE0,laundering,"pattern member, >=2 laundering tx",rapid_forwarding|linkage,account,transaction
+11157-801658CE0,laundering,"pattern member, >=2 laundering tx",,none,none
+23-8001253F0,laundering,"pattern member, >=2 laundering tx",,none,none
+26302-809DACA80,laundering,"pattern member, >=2 laundering tx",collection|linkage,account,transaction
+133590-80CD71F30,laundering,"pattern member, >=2 laundering tx",,none,none
+112-8000C76D0,laundering,"pattern member, >=2 laundering tx",dispersal|linkage,account,transaction
+2991-8025D1EB0,laundering,"pattern member, >=2 laundering tx",linkage,transaction,none
+49365-812A09D40,laundering,"pattern member, >=2 laundering tx",pass_through|linkage,account,transaction
+111312-8046CBEE0,laundering,"pattern member, >=2 laundering tx",,none,none
+23-8002A0E00,laundering,"pattern member, >=2 laundering tx",collection|linkage,account,transaction
+12-800550B60,laundering,"pattern member, >=2 laundering tx",dispersal|linkage,account,transaction
+214615-8075AC7C0,laundering,"pattern member, >=2 laundering tx",collection|dispersal|linkage,account,account
+40836-80F06ABB0,laundering,"pattern member, >=2 laundering tx",,none,none
+2591-801A8B2F0,laundering,"pattern member, >=2 laundering tx",,none,none
+214050-80537F610,laundering,"pattern member, >=2 laundering tx",linkage,transaction,none
+15231-80266F880,laundering,"pattern member, >=2 laundering tx",rapid_forwarding|linkage,account,transaction
+13083-803CF7A80,laundering,"pattern member, >=2 laundering tx",pass_through|rapid_forwarding|linkage,account,account
+23-80017F180,laundering,"pattern member, >=2 laundering tx",collection,transaction,transaction
+20-8001C97D0,laundering,"pattern member, >=2 laundering tx",dispersal|rapid_forwarding|linkage,account,account
+16031-802F7C400,clean,"clean, busiest decile",,none,none
+11056-80092B4D0,clean,"clean, busiest decile",dispersal|pass_through,account,account
+11405-8014EFB60,clean,"clean, busiest decile",rapid_forwarding,transaction,transaction
+24132-80320BB30,clean,"clean, busiest decile",dispersal,transaction,transaction
+21387-800B10B00,clean,"clean, busiest decile",rapid_forwarding,transaction,transaction
+212-80835AF20,clean,"clean, random",dispersal,transaction,transaction
+215803-8068B59E0,clean,"clean, random",,none,none
+11-8089489A0,clean,"clean, random",,none,none
+238123-813259E20,clean,"clean, random",,none,none
+121580-813A6E430,clean,"clean, random",,none,none

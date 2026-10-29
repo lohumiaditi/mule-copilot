@@ -1,0 +1,10 @@
+account_id,draft,error,context,real_error,comment
+12-800550B60,1,Number 13 is not in the evidence.,"2022-09-09 13:20 UTC - out to 1024-800749FC0 - €235,508.58 (USD 275,965.06) - Wire",no,Time 13:20 is in the evidence timestamp 2022-09-09T13:20; verifier could not read hours after 'T'. Fixed.
+13083-803CF7A80,1,Number 99.76 is not in the evidence.,- **Pass‑through ratio:** 0.9876 (99.76 % of inbound funds forwarded) – percentile 99.7 %,yes,Ratio 0.9876 written as 99.76% (should be 98.76%).
+212-80835AF20,1,Number 95.4 is not in the evidence.,- **Fan‑out in 48 h:** 5 (95.4 percentile),yes,Fan-out percentile given as 95.4; evidence says 95.1.
+215803-8068B59E0,1,No clause is cited.,,yes,Note cited no clause at all.
+23-80017F180,1,Number 12 is not in the evidence.,"12,403.93 EUR (USD 14,534.72) from 23-8000FFF70 on 2022-09-07 12:44 UTC",no,Time 12:44 from an ISO timestamp; same verifier bug. Fixed.
+23-80017F180,1,Number 22 is not in the evidence.,"3,777.06 EUR (USD 4,425.90) from 22-80027F7A0 on 2022-09-06 22:49 UTC",no,Time 22:49 from an ISO timestamp; same verifier bug. Fixed.
+238123-813259E20,1,Number 23 is not in the evidence.,"2022-09-01 23:48 UTC - €38,339.01 (USD 44,925.02) - Cash",no,Time 23:48 from an ISO timestamp; same verifier bug. Fixed.
+26302-809DACA80,1,Number 5236.15 is not in the evidence.,- Recent outbound transfer of **5236.15 Yen** (USD 5252.52) on 2022‑09‑10T13:24:00Z (ACH),yes,"Yen amount mangled: 5236.15 instead of 553,615.35."
+49365-812A09D40,1,Cited clause [pass_through_min] does not exist in the corpus.,| **Pass‑through** | Most money received is sent on (high pass‑through ratio) | pass‑through ratio = 0.9828 | Minimum 0.8 [**pass_through_min**] | [SOP Annex III para 3 (Suspected Money Mule Transaction)] – defines a suspected money‑mule transaction based on disproportionate flow; [KYC‑CB‑2025 para ,no,Field name [pass_through_min] in brackets read as a citation; not a factual error. Fixed.

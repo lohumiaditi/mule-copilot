@@ -21,7 +21,37 @@ all logged.
 
 ## Results
 
-<!-- RESULTS -->
+Measured on frozen test sets: 30 accounts (20 laundering, 10 clean, half of the clean ones drawn
+from the busiest 10% of accounts) and 15 synthetic customer explanations. Model `openai/gpt-oss-120b`.
+Details, raw outputs and the hand-check sheets: [evals/results.md](evals/results.md).
+
+| Metric | Test set | Result |
+|---|---|---|
+| Detection: any hold (precision / recall) | 30 accounts | With NCRP linkage **74% / 70%** (14 of 20 caught, 5 of 10 clean held). Without: 71% / 60% |
+| Detection: account-level hold (precision / recall) | 30 accounts | With linkage **92% / 55%**. Without: 80% / 20% |
+| Citation accuracy | 15 notes, 80 citations | All 80 exist. Hand-checked: **69 support the claim**, 8 partly, 3 do not |
+| Verifier catch rate | 30 notes | As run: **4 of 8** drafts sent back had a real error (a misread yen amount, two wrong percentages, an uncited note); the other 4 were verifier bugs, fixed since |
+| Explanation-assessor agreement | 15 explanations | **12 of 15**. It never released a mule account; it kept 3 honest customers on hold |
+| Time per case | 30 accounts | **Median 30 s** (max 90 s) from account ID to verified note, against about 90 minutes assumed for a manual write-up; about 5,400 LLM tokens per note |
+
+What the numbers say:
+
+- **Rules catch most mule-like accounts, and linkage matters most.** Recall rises from 60% to 70%
+  with the NCRP linkage indicator, and account-level holds from 20% to 55%. The 6 misses show no
+  unusual transaction shape at all; graph features alone won't find them.
+- **Clean accounts get held, at the lighter level.** 4 of the 5 clean accounts held come from the
+  busiest-decile hard negatives, and 4 of the 5 holds are on flagged amounts only. The explanation
+  step is what clears them; 1 clean account drew an account-level hold.
+- **The assessor errs toward caution.** All 3 disagreements are customers paying out of an existing
+  balance. `rapid_forward_24h` cannot see opening balances, so small credits look forwarded. In one
+  of the three the assessor also caught a real inconsistency in the test explanation itself ("twice
+  a week" against near-daily payments). Labels were frozen before the run and are reported as is.
+- **The verifier earns its place, and the eval improved it.** It caught a mangled amount and wrong
+  percentages that would otherwise have reached the officer. Its false alarms came from two bugs
+  (hours inside ISO timestamps, field names in brackets). With those fixed, re-checking the same
+  saved drafts gives 4 of 4 send-backs real and no note wrongly flagged; that re-check is not
+  independent, since the fixes came from this set.
+- **Hold level is never misstated**: in all 30 notes the stated hold matches the rules.
 
 ## Architecture
 
@@ -311,14 +341,24 @@ cycles highlighted), documents, the MIS log and the evidence. Dates are simulate
 - The linkage indicator relies on a simulated NCRP list built from labels (see above).
 - The SOP's ₹1,000 floor is not applied: IBM amounts are in mixed currencies, not rupees.
 - The verifier checks that every number exists in the evidence, not that it is attached to the right
-  label. One note gave the fan-in percentile next to the fan-out count. The Day 4 hand-check of
-  notes measures how often this happens.
+  label. During development one note gave the fan-in percentile next to the fan-out count.
+- Citations can be decorative: 11 of 80 hand-checked citations only partly support, or do not
+  support, the sentence they sit in (for example a monitoring paragraph cited for a threshold).
+  The verifier checks that a clause exists, not that it fits.
+- `rapid_forward_24h` ignores opening balances, which IBM's data does not have. Accounts that spend
+  an existing balance while receiving small credits look like rapid forwarders; this drives the
+  assessor's 3 disagreements and 2 of the 5 clean accounts held.
+- The 15 explanations and their labels were written by the author; they are a smoke test of the
+  assessor, not a benchmark.
 - Dates are simulated; the workflow does not wait on a real calendar or send real messages.
 
 ## Next
 
 - Shared identifiers (phone, device, IP, address) in the graph: the strongest real-world mule
   signal, absent from IBM's data.
+- Opening and running balances in the rapid-forwarding feature, so spending an existing balance is
+  not mistaken for forwarding.
+- A citation-fit check: does the cited clause actually support the sentence it sits in?
 - Compare against the KYC-declared profile (income, occupation) for SOP indicator (a).
 - Time-respecting cycles, and the SOP's ₹1,000 floor once amounts are in rupees.
 - A learned risk score calibrated on confirmed cases, with the current rules kept as guardrails.

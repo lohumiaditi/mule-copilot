@@ -216,6 +216,22 @@ def report():
         per_draft = ver.groupby(["account_id", "draft"]).real_error.agg(lambda s: "yes" in set(s))
         out["verifier"] = {"drafts_sent_back": len(per_draft), "with_real_error": int(per_draft.sum()),
                            "errors_flagged": len(ver), "errors_real": int((ver.real_error == "yes").sum())}
+        # Re-check the same saved drafts with the current verifier (fixed after this run).
+        ids, real = corpus.clauses_by_id().keys(), set(per_draft[per_draft].index)
+        again, still_flagged = [], 0
+        for aid, r in records.items():
+            ev = {"evidence": r["evidence"], "clauses": r["clauses"]}
+            for i, entry in enumerate(r["error_log"]):
+                errs = verifier.check(entry["note"], ev, ids) + verifier.check_hold_level(entry["note"], r["typology"]["hold_level"])
+                if errs and i < len(r["error_log"]) - 1:
+                    again.append((aid, entry["draft"]) in real)
+                elif errs:
+                    still_flagged += 1
+        out["verifier_after_fix"] = {"drafts_sent_back": len(again), "with_real_error": sum(again), "flagged": still_flagged}
+
+    tokens = [r["tokens"]["input"] + r["tokens"]["output"] for r in records.values() if r.get("tokens")]
+    out["notes"]["tokens_per_note_mean"] = statistics.mean(tokens) if tokens else None
+    out["notes"]["notes_with_token_counts"] = len(tokens)
 
     ass = pd.read_csv(ASSESSOR)
     out["assessor"] = {"n": len(ass), "agree": int((ass.expected == ass.predicted).sum()),
@@ -241,14 +257,19 @@ def report():
         f"{c['supports_yes']} support the claim, {c['supports_partly']} partly, {c['supports_no']} do not |",
     ]
     if "verifier" in out:
-        v = out["verifier"]
-        lines.append(f"| Verifier catch rate | {n['n']} notes | {v['with_real_error']} of {v['drafts_sent_back']} drafts sent back had a real error; "
-                     f"{n['flagged_after_retry']} note(s) still flagged after the retry |")
+        v, f = out["verifier"], out["verifier_after_fix"]
+        lines.append(f"| Verifier catch rate | {n['n']} notes | As run: {v['with_real_error']} of {v['drafts_sent_back']} drafts sent back had a real error; "
+                     f"{n['flagged_after_retry']} note(s) still flagged after the retry. After fixing the two verifier bugs those false alarms "
+                     f"exposed, the same drafts give {f['with_real_error']} of {f['drafts_sent_back']} real, {f['flagged']} flagged (fixes informed by this set) |")
     lines += [
         f"| Explanation-assessor agreement | 15 explanations | {a['agree']} of {a['n']} ({pct(a['agree'] / a['n'])}); "
         f"{a['wrongly_removed']} would have released a mule account, {a['wrongly_continued']} kept an honest customer on hold |",
         f"| Time per case | {n['n']} accounts | mean {n['seconds_mean']:.0f}s, median {n['seconds_median']:.0f}s, max {n['seconds_max']:.0f}s "
-        f"from account ID to verified note, vs {MANUAL_MINUTES} min assumed manual |",
+        f"from account ID to verified note, vs {MANUAL_MINUTES} min assumed manual; "
+        f"{n['tokens_per_note_mean']:,.0f} LLM tokens per note on average ({n['notes_with_token_counts']} notes measured) |",
+        "",
+        "Citation and verifier judgments: first pass by an AI coding assistant, recorded with reasons in "
+        "[citation_review.csv](citation_review.csv) and [verifier_review.csv](verifier_review.csv) for review.",
         "",
         f"The hold level each note states matched the rules in {n['hold_matches_rules']} of {n['n']} cases; "
         f"{n['first_draft_pass']} of {n['n']} notes passed the verifier on the first draft.",

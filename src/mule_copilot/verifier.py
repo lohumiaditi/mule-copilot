@@ -21,8 +21,11 @@ NORMALISE = str.maketrans({"‐": "-", "‑": "-", "‒": "-", "–": "-", "【"
                            "​": None, "‌": None, "‍": None, "⁠": None, "﻿": None})
 
 
+ISO_T = re.compile(r"(?<=\d)T(?=\d)")   # 2022-09-09T13:20 -> 2022-09-09 13:20, so the hour is read
+
+
 def _strip(text):
-    return ACCOUNT_ID.sub(" ", text.translate(NORMALISE))
+    return ISO_T.sub(" ", ACCOUNT_ID.sub(" ", text.translate(NORMALISE)))
 
 
 def normalise_citation(cid):
@@ -72,7 +75,9 @@ def _supported(value, decimals, allowed):
 def check(note, evidence, known_clause_ids):
     note = note.translate(NORMALISE)
     errors = []
-    cited = [normalise_citation(cid) for group in CITATION.findall(note) for cid in group.split(";")]
+    # Clause IDs always contain spaces; a bracketed single token like [pass_through_min] is not a citation.
+    groups = [g for g in CITATION.findall(note) if " " in g.strip()]
+    cited = [normalise_citation(cid) for group in groups for cid in group.split(";")]
     if not cited:
         errors.append("No clause is cited.")
     for cid in dict.fromkeys(cited):
@@ -80,7 +85,7 @@ def check(note, evidence, known_clause_ids):
             errors.append(f"Cited clause [{cid}] does not exist in the corpus.")
 
     allowed = evidence_numbers(evidence) | {0.0, 1.0}
-    body = CITATION.sub(" ", note)
+    body = CITATION.sub(lambda m: " " if " " in m.group(1).strip() else m.group(0), note)
     for value, decimals in dict.fromkeys(numbers_in(body)):
         if not _supported(value, decimals, allowed):
             shown = f"{value:.{decimals}f}"

@@ -19,6 +19,16 @@ def test_account_ids_with_unicode_hyphens_are_not_numbers():
     assert verifier.check(note, EVIDENCE, CLAUSES) == []
 
 
+def test_times_inside_iso_timestamps_count_as_evidence():
+    evidence = {**EVIDENCE, "transfers": [{"ts": "2022-09-09T13:20:00Z"}]}
+    assert verifier.check("Paid at 13:20 on 2022-09-09 [SOP Annex III para 4 step 1].", evidence, CLAUSES) == []
+
+
+def test_bracketed_field_names_are_not_citations():
+    note = "Pass-through 0.8149, minimum 0.8 [pass_through_min] [SOP Annex III para 4 step 1]."
+    assert verifier.check(note, {**EVIDENCE, "thresholds": {"pass_through_min": 0.8}}, CLAUSES) == []
+
+
 def test_invented_number_is_caught():
     note = "Received USD 250,000.00 [SOP Annex III para 4 step 1]."
     assert verifier.check(note, EVIDENCE, CLAUSES) == ["Number 250000.00 is not in the evidence."]

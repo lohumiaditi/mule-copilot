@@ -1,0 +1,264 @@
+{
+ "account_id": "111312-8046CBEE0",
+ "use_linkage": true,
+ "typology": {
+  "signals": [],
+  "n_signals": 0,
+  "n_rules": 6,
+  "thresholds": {
+   "top_percentile": 95.0,
+   "pass_through_min": 0.8,
+   "cycles_min": 1
+  },
+  "hold_level": "none",
+  "confidence": "n/a",
+  "anchor_clauses": []
+ },
+ "clauses": [
+  {
+   "id": "KYC-CB-2025 para 39",
+   "title": "On-going due diligence",
+   "text": "39. The bank shall undertake ongoing due diligence of customers to ensure that their transactions are consistent with their knowledge about the customers, customers’ business and risk profile, the source of funds / wealth.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  },
+  {
+   "id": "KYC-CB-2025 para 41",
+   "title": "Monitoring in line with risk category",
+   "text": "41. The bank shall align the extent of monitoring with the risk category of the customer. (1) The bank shall put in place a system of periodic review of risk categorisation of accounts, with such periodicity being at least once in every six months, and shall establish the need for applying enhanced due diligence measures. (2) The bank shall closely monitor the transactions in accounts of marketing firms, especially accounts of Multi-level Marketing (MLM) companies. Explanation: The bank shall subject high-risk accounts to more intensified monitoring. Explanation: Cases where a large number of cheque books are sought by the company and / or multiple small deposits (generally in cash) across the country in one bank account and / or where a large number of cheques are issued bearing similar amounts / dates, shall be immediately reported to RBI and other appropriate authorities such as FIU-IND.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  }
+ ],
+ "errors": [],
+ "error_log": [
+  {
+   "draft": 1,
+   "note": "## Account summary\n- **Account ID:** 111312-8046CBEE0  \n- **First seen:** 2022-09-01 00:44:00  \n- **Last seen:** 2022-09-10 16:55:00  \n- **Incoming transactions:** 23 (total USD 4,203,210.68)  \n- **Outgoing transactions:** 22 (total USD 14,425.74)  \n- **Unique senders:** 3  \n- **Unique receivers:** 2  \n- **Fan‑in (48 h):** 3 (82.7 percentile)  \n- **Fan‑out (48 h):** 2 (70.3 percentile)  \n- **Pass‑through ratio:** 0.0034 (58.6 percentile)  \n- **Rapid forward (24 h):** 0.0001 (65.4 percentile)  \n- **3‑5‑cycle count:** 0  \n\n## Evidence\n- Transaction mix (from `transfer_summary`):  \n  - Inbound Cheque: 12 transfers, USD 4,191,382.48, 2 counterparties  \n  - Inbound Credit Card: 10 transfers, USD 913.33, 1 counterparty  \n  - Inbound ACH: 1 transfer, USD 10,914.87, 1 counterparty  \n  - Outbound ACH: 8 transfers, USD 12,075.96, 2 counterparties  \n  - Outbound Credit Card: 7 transfers, USD 1,551.01, 1 counterparty  \n  - Outbound Cheque: 7 transfers, USD 798.77, 1 counterparty  \n- Recent inbound amounts are predominantly small Yen‑denominated credits (e.g., ¥9,626.48 ≈ USD 91.33 via Credit Card).  \n- Recent outbound amounts are small Yen‑denominated debits (e.g., ¥1,529.26 ≈ USD 14.51 via ACH).  \n\n## Patterns matched\n**None triggered by the rules**\n\n## Red flags and SOP basis\n**None triggered by the rules**  \n\n| Check | Value | Threshold | SOP reference |\n|-------|-------|-----------|---------------|\n| Top percentile (fan‑in 48 h) | 82.7 % | 95.0 % | [KYC-CB-2025 para 39] |\n| Pass‑through minimum ratio | 0.0034 | 0.8 | [KYC-CB-2025 para 39] |\n| Minimum cycles (3‑5) | 0 | 1 | [KYC-CB-2025 para 39] |\n\nThe above thresholds are taken from the typology configuration; none are met, so no red‑flag conditions are satisfied.\n\n## Recommended hold level\nnone  \n\n## Confidence\nn/a",
+   "errors": []
+  }
+ ],
+ "drafts": 1,
+ "flagged": false,
+ "tokens": {
+  "input": 2019,
+  "output": 1203
+ },
+ "evidence": {
+  "account": {
+   "id": "111312-8046CBEE0",
+   "first_seen": "2022-09-01 00:44:00",
+   "last_seen": "2022-09-10 16:55:00",
+   "n_tx_in": 23,
+   "n_tx_out": 22,
+   "n_senders": 3,
+   "n_receivers": 2,
+   "total_in_usd": 4203210.68,
+   "total_out_usd": 14425.74,
+   "fan_in_48h": 3,
+   "fan_in_48h_pctl": 82.7,
+   "fan_out_48h": 2,
+   "fan_out_48h_pctl": 70.3,
+   "pass_through_ratio": 0.0034,
+   "pass_through_ratio_pctl": 58.6,
+   "rapid_forward_24h": 0.0001,
+   "rapid_forward_24h_pctl": 65.4,
+   "cycles_3_5": 0
+  },
+  "typology": {
+   "signals": [],
+   "n_signals": 0,
+   "n_rules": 6,
+   "thresholds": {
+    "top_percentile": 95.0,
+    "pass_through_min": 0.8,
+    "cycles_min": 1
+   },
+   "hold_level": "none",
+   "confidence": "n/a",
+   "anchor_clauses": []
+  },
+  "recent_transfers": [
+   {
+    "direction": "in",
+    "counterparty": "11128-80449E4D0",
+    "ts": "2022-09-10T16:55:00Z",
+    "amount": 9626.48,
+    "currency": "Yen",
+    "amount_usd": 91.33,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "in",
+    "counterparty": "11128-80449E4D0",
+    "ts": "2022-09-10T16:51:00Z",
+    "amount": 26625.6,
+    "currency": "Yen",
+    "amount_usd": 252.61,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "11128-80449E4D0",
+    "ts": "2022-09-09T12:33:00Z",
+    "amount": 9626.48,
+    "currency": "Yen",
+    "amount_usd": 91.33,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "in",
+    "counterparty": "11128-80449E4D0",
+    "ts": "2022-09-09T12:32:00Z",
+    "amount": 26625.6,
+    "currency": "Yen",
+    "amount_usd": 252.61,
+    "format": "Cheque"
+   },
+   {
+    "direction": "out",
+    "counterparty": "210972-8046E3870",
+    "ts": "2022-09-09T10:54:00Z",
+    "amount": 23353.73,
+    "currency": "Yen",
+    "amount_usd": 221.57,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "in",
+    "counterparty": "9665-8046AE940",
+    "ts": "2022-09-09T10:46:00Z",
+    "amount": 220752728.8,
+    "currency": "Yen",
+    "amount_usd": 2094428.17,
+    "format": "Cheque"
+   },
+   {
+    "direction": "out",
+    "counterparty": "210972-8046E3870",
+    "ts": "2022-09-09T10:43:00Z",
+    "amount": 1529.26,
+    "currency": "Yen",
+    "amount_usd": 14.51,
+    "format": "ACH"
+   },
+   {
+    "direction": "out",
+    "counterparty": "210972-8046E3870",
+    "ts": "2022-09-09T10:36:00Z",
+    "amount": 12027.23,
+    "currency": "Yen",
+    "amount_usd": 114.11,
+    "format": "Cheque"
+   },
+   {
+    "direction": "out",
+    "counterparty": "233168-80C11E710",
+    "ts": "2022-09-08T18:48:00Z",
+    "amount": 11974.4,
+    "currency": "US Dollar",
+    "amount_usd": 11974.4,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "513-8027C1CE0",
+    "ts": "2022-09-08T07:57:00Z",
+    "amount": 1150427.42,
+    "currency": "Yen",
+    "amount_usd": 10914.87,
+    "format": "ACH"
+   },
+   {
+    "direction": "out",
+    "counterparty": "210972-8046E3870",
+    "ts": "2022-09-08T07:42:00Z",
+    "amount": 1529.26,
+    "currency": "Yen",
+    "amount_usd": 14.51,
+    "format": "ACH"
+   },
+   {
+    "direction": "out",
+    "counterparty": "210972-8046E3870",
+    "ts": "2022-09-08T07:32:00Z",
+    "amount": 23353.73,
+    "currency": "Yen",
+    "amount_usd": 221.57,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "out",
+    "counterparty": "210972-8046E3870",
+    "ts": "2022-09-08T07:31:00Z",
+    "amount": 12027.23,
+    "currency": "Yen",
+    "amount_usd": 114.11,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "11128-80449E4D0",
+    "ts": "2022-09-08T02:59:00Z",
+    "amount": 9626.48,
+    "currency": "Yen",
+    "amount_usd": 91.33,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "in",
+    "counterparty": "11128-80449E4D0",
+    "ts": "2022-09-08T02:42:00Z",
+    "amount": 26625.6,
+    "currency": "Yen",
+    "amount_usd": 252.61,
+    "format": "Cheque"
+   }
+  ],
+  "transfer_summary": [
+   {
+    "direction": "in",
+    "format": "Cheque",
+    "transfers": 12,
+    "amount_usd": 4191382.48,
+    "counterparties": 2
+   },
+   {
+    "direction": "in",
+    "format": "Credit Card",
+    "transfers": 10,
+    "amount_usd": 913.33,
+    "counterparties": 1
+   },
+   {
+    "direction": "in",
+    "format": "ACH",
+    "transfers": 1,
+    "amount_usd": 10914.87,
+    "counterparties": 1
+   },
+   {
+    "direction": "out",
+    "format": "ACH",
+    "transfers": 8,
+    "amount_usd": 12075.96,
+    "counterparties": 2
+   },
+   {
+    "direction": "out",
+    "format": "Credit Card",
+    "transfers": 7,
+    "amount_usd": 1551.01,
+    "counterparties": 1
+   },
+   {
+    "direction": "out",
+    "format": "Cheque",
+    "transfers": 7,
+    "amount_usd": 798.77,
+    "counterparties": 1
+   }
+  ],
+  "cycles": [],
+  "reported_counterparties": []
+ },
+ "seconds": 24.9
+}

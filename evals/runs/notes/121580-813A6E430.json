@@ -1,0 +1,250 @@
+{
+ "account_id": "121580-813A6E430",
+ "use_linkage": true,
+ "typology": {
+  "signals": [],
+  "n_signals": 0,
+  "n_rules": 6,
+  "thresholds": {
+   "top_percentile": 95.0,
+   "pass_through_min": 0.8,
+   "cycles_min": 1
+  },
+  "hold_level": "none",
+  "confidence": "n/a",
+  "anchor_clauses": []
+ },
+ "clauses": [
+  {
+   "id": "KYC-CB-2025 para 39",
+   "title": "On-going due diligence",
+   "text": "39. The bank shall undertake ongoing due diligence of customers to ensure that their transactions are consistent with their knowledge about the customers, customers’ business and risk profile, the source of funds / wealth.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  },
+  {
+   "id": "KYC-CB-2025 para 41",
+   "title": "Monitoring in line with risk category",
+   "text": "41. The bank shall align the extent of monitoring with the risk category of the customer. (1) The bank shall put in place a system of periodic review of risk categorisation of accounts, with such periodicity being at least once in every six months, and shall establish the need for applying enhanced due diligence measures. (2) The bank shall closely monitor the transactions in accounts of marketing firms, especially accounts of Multi-level Marketing (MLM) companies. Explanation: The bank shall subject high-risk accounts to more intensified monitoring. Explanation: Cases where a large number of cheque books are sought by the company and / or multiple small deposits (generally in cash) across the country in one bank account and / or where a large number of cheques are issued bearing similar amounts / dates, shall be immediately reported to RBI and other appropriate authorities such as FIU-IND.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  }
+ ],
+ "errors": [],
+ "error_log": [
+  {
+   "draft": 1,
+   "note": "## Account summary\n- Account ID: **121580-813A6E430**  \n- First seen: **2022-09-01 13:32:00**  \n- Last seen: **2022-09-09 02:46:00**  \n- Inbound transactions: **23** (total USD 137,970.29) – no outbound activity.  \n- Unique senders: **2**; unique receivers: **0**.  \n- Fan‑in (48 h): **2** (49.4 percentile).  \n- Pass‑through ratio: **0.0** (0.0 percentile).  \n- Cycle count (3‑5 transactions): **0**.  \n\n## Evidence\n- Recent inbound transfers (all from counterparty **220504-807DF2010**) between 2022‑09‑05 and 2022‑09‑09, comprising cash, ACH and cheque formats, with individual USD amounts ranging from **789.98** to **9,873.08**.  \n- Transfer summary shows:\n  - Cheque: **8** transfers, **USD 48,447.87**.  \n  - ACH: **7** transfers, **USD 5,529.84**.  \n  - Cash: **7** transfers, **USD 69,111.57**.  \n  - Credit Card: **1** transfer, **USD 14,881.01**.  \n\n## Patterns matched\n**None triggered by the rules**\n\n## Red flags and SOP basis\n**None triggered by the rules**  \n\n| Check | Value | Threshold | SOP reference |\n|-------|-------|-----------|---------------|\n| Top percentile (fan‑in 48 h) | 49.4 % | 95.0 % | [KYC-CB-2025 para 39] |\n| Pass‑through ratio | 0.0 | 0.8 | [KYC-CB-2025 para 39] |\n| Cycle count (3‑5 transactions) | 0 | 1 | [KYC-CB-2025 para 39] |\n\n## Recommended hold level\n**none**  \n\n## Confidence\n**n/a**",
+   "errors": []
+  }
+ ],
+ "drafts": 1,
+ "flagged": false,
+ "tokens": {
+  "input": 1933,
+  "output": 913
+ },
+ "evidence": {
+  "account": {
+   "id": "121580-813A6E430",
+   "first_seen": "2022-09-01 13:32:00",
+   "last_seen": "2022-09-09 02:46:00",
+   "n_tx_in": 23,
+   "n_tx_out": 0,
+   "n_senders": 2,
+   "n_receivers": 0,
+   "total_in_usd": 137970.29,
+   "total_out_usd": 0.0,
+   "fan_in_48h": 2,
+   "fan_in_48h_pctl": 49.4,
+   "fan_out_48h": 0,
+   "fan_out_48h_pctl": 0.0,
+   "pass_through_ratio": 0.0,
+   "pass_through_ratio_pctl": 0.0,
+   "rapid_forward_24h": 0.0,
+   "rapid_forward_24h_pctl": 0.0,
+   "cycles_3_5": 0
+  },
+  "typology": {
+   "signals": [],
+   "n_signals": 0,
+   "n_rules": 6,
+   "thresholds": {
+    "top_percentile": 95.0,
+    "pass_through_min": 0.8,
+    "cycles_min": 1
+   },
+   "hold_level": "none",
+   "confidence": "n/a",
+   "anchor_clauses": []
+  },
+  "recent_transfers": [
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-09T02:46:00Z",
+    "amount": 7643.74,
+    "currency": "UK Pound",
+    "amount_usd": 9873.08,
+    "format": "Cash"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-09T02:30:00Z",
+    "amount": 611.6,
+    "currency": "UK Pound",
+    "amount_usd": 789.98,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-09T02:30:00Z",
+    "amount": 2364.59,
+    "currency": "UK Pound",
+    "amount_usd": 3054.24,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-08T10:10:00Z",
+    "amount": 7643.74,
+    "currency": "UK Pound",
+    "amount_usd": 9873.08,
+    "format": "Cash"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-08T10:06:00Z",
+    "amount": 611.6,
+    "currency": "UK Pound",
+    "amount_usd": 789.98,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-08T10:05:00Z",
+    "amount": 2364.59,
+    "currency": "UK Pound",
+    "amount_usd": 3054.24,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-07T22:19:00Z",
+    "amount": 611.6,
+    "currency": "UK Pound",
+    "amount_usd": 789.98,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-07T22:07:00Z",
+    "amount": 7643.74,
+    "currency": "UK Pound",
+    "amount_usd": 9873.08,
+    "format": "Cash"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-07T22:03:00Z",
+    "amount": 2364.59,
+    "currency": "UK Pound",
+    "amount_usd": 3054.24,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-06T21:08:00Z",
+    "amount": 611.6,
+    "currency": "UK Pound",
+    "amount_usd": 789.98,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-06T21:02:00Z",
+    "amount": 7643.74,
+    "currency": "UK Pound",
+    "amount_usd": 9873.08,
+    "format": "Cash"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-06T21:00:00Z",
+    "amount": 2364.59,
+    "currency": "UK Pound",
+    "amount_usd": 3054.24,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-05T14:45:00Z",
+    "amount": 7643.74,
+    "currency": "UK Pound",
+    "amount_usd": 9873.08,
+    "format": "Cash"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-05T14:38:00Z",
+    "amount": 2364.59,
+    "currency": "UK Pound",
+    "amount_usd": 3054.24,
+    "format": "Cheque"
+   },
+   {
+    "direction": "in",
+    "counterparty": "220504-807DF2010",
+    "ts": "2022-09-05T14:31:00Z",
+    "amount": 611.6,
+    "currency": "UK Pound",
+    "amount_usd": 789.98,
+    "format": "ACH"
+   }
+  ],
+  "transfer_summary": [
+   {
+    "direction": "in",
+    "format": "Cheque",
+    "transfers": 8,
+    "amount_usd": 48447.87,
+    "counterparties": 2
+   },
+   {
+    "direction": "in",
+    "format": "ACH",
+    "transfers": 7,
+    "amount_usd": 5529.84,
+    "counterparties": 1
+   },
+   {
+    "direction": "in",
+    "format": "Cash",
+    "transfers": 7,
+    "amount_usd": 69111.57,
+    "counterparties": 1
+   },
+   {
+    "direction": "in",
+    "format": "Credit Card",
+    "transfers": 1,
+    "amount_usd": 14881.01,
+    "counterparties": 1
+   }
+  ],
+  "cycles": [],
+  "reported_counterparties": []
+ },
+ "seconds": 25.7
+}

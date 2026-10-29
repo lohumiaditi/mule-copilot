@@ -1,0 +1,274 @@
+{
+ "account_id": "13083-803CF7A80",
+ "use_linkage": true,
+ "typology": {
+  "signals": [
+   {
+    "name": "pass_through",
+    "description": "Most money received is sent on",
+    "sop_indicator": "a",
+    "values": {
+     "pass_through_ratio": 0.9876,
+     "total_in_usd": 12241821.23,
+     "total_out_usd": 12395895.35
+    }
+   },
+   {
+    "name": "rapid_forwarding",
+    "description": "Money forwarded within 24 hours of arrival",
+    "sop_indicator": "a",
+    "values": {
+     "rapid_forward_24h": 0.9999,
+     "rapid_forward_24h_pctl": 97.4
+    }
+   },
+   {
+    "name": "linkage",
+    "description": "Transfers with accounts already reported on NCRP",
+    "sop_indicator": "b",
+    "values": {
+     "reported_counterparties": 1,
+     "transfers_with_reported": 1
+    }
+   }
+  ],
+  "n_signals": 3,
+  "n_rules": 6,
+  "thresholds": {
+   "top_percentile": 95.0,
+   "pass_through_min": 0.8,
+   "cycles_min": 1
+  },
+  "hold_level": "account",
+  "confidence": "high",
+  "anchor_clauses": [
+   "SOP Annex III para 4 step 1",
+   "SOP Annex III para 6(ii)",
+   "SOP Annex III para 4 step 2",
+   "SOP Annex III para 5 step 3",
+   "SOP Annex III para 3 (Suspected Money Mule Transaction)",
+   "KYC-CB-2025 para 40"
+  ]
+ },
+ "clauses": [
+  {
+   "id": "SOP Annex III para 4 step 1",
+   "title": "Procedure and Timeline for Temporary Debit Hold, step 1",
+   "text": "The bank shall place a Temporary Debit Hold on the Suspected Money Mule Transaction or, if the account is a Suspected Money Mule Account, on the entire account. Timeline: Immediately",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "SOP Annex III para 6(ii)",
+   "title": "Internal Policy, item (ii)",
+   "text": "(ii) norms for placing temporary debit hold on amounts or account level and scenarios for its removal. The Internal Policy shall ensure that the temporary debit hold at the account level shall be applied as a last resort and only in exceptional circumstances;",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "SOP Annex III para 4 step 2",
+   "title": "Procedure and Timeline for Temporary Debit Hold, step 2",
+   "text": "The bank shall notify the account holder of the Temporary Debit Hold, stating reasons, the process for removal, and the concerned officer's contact details, through digital mode (if mobile number / e-mail is on record) or physical mode. Timeline: On putting the temporary debit hold, the bank shall immediately notify the account holder, if communicating through digital mode, otherwise by EOD of the next day.",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "SOP Annex III para 5 step 3",
+   "title": "Procedure and Timeline for Removal of Temporary Debit Hold, step 3",
+   "text": "The bank shall seek the explanation / justification on the genuineness of the transaction / account from the account holder. Timeline: The bank shall give 20 days’ time from the date of Temporary Debit Hold to the account holder for submission of the explanation / justification.",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "SOP Annex III para 3 (Suspected Money Mule Transaction)",
+   "title": "Definition: Suspected Money Mule Transaction",
+   "text": "“Suspected Money Mule Transaction” means a transaction of ₹1000 and above, flagged by the bank's transaction-monitoring systems (including AI / ML-based tools), as suspected to be proceeds of money mule activity or cyber-enabled financial fraud, based on indicators such as being unusual for or disproportionate to the account holder's declared profile; or having linkage to an account already reported as money mule or fraudulent.",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "KYC-CB-2025 para 40",
+   "title": "Transactions that need close monitoring",
+   "text": "40. Without prejudice to the generality of factors that call for close monitoring, the bank shall necessarily monitor the following types of transactions: (1) Large and complex transactions including RTGS transactions, and those with unusual patterns, inconsistent with the normal and expected activity of the customer, which have no apparent economic rationale or legitimate purpose. (2) Transactions which exceed the thresholds prescribed for specific categories of accounts. (3) High account turnover inconsistent with the size of the balance maintained. (4) Deposit of third-party cheques, drafts, etc. in the existing and newly opened accounts followed by cash withdrawals for large amounts. For ongoing due diligence, the bank may consider adopting appropriate innovations including artificial intelligence and machine learning (AI and ML) technologies to support effective monitoring.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  },
+  {
+   "id": "SOP Annex III para 3 (Money Mule Account)",
+   "title": "Definition: Money Mule Account",
+   "text": "“Money Mule Account” means an account used, knowingly or unknowingly, to receive, layer or transfer proceeds of cyber-enabled financial fraud on behalf of another person.",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "KYC-CB-2025 para 68",
+   "title": "Operation of Bank Accounts and Money Mules",
+   "text": "68. Operation of Bank Accounts and Money Mules: The bank shall strictly adhere to the instructions on opening of accounts and monitoring of transactions, to minimise the operations of ‘Money Mules’ that are used to launder the proceeds of fraud schemes (e.g., phishing and identity theft) by criminals who gain illegal access to deposit accounts by recruiting third parties that act as ‘money mules’. The bank shall undertake diligence measures and meticulous monitoring to identify accounts which are operated as Money Mules and take appropriate action, including reporting of suspicious transactions to FIU-IND. Further, if it is established that an account opened and operated is that of a Money Mule, but STR was not filed by the concerned bank, it shall then be deemed that the bank has not complied with these directions.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  }
+ ],
+ "errors": [],
+ "error_log": [
+  {
+   "draft": 1,
+   "note": "## Account summary\n- **Account ID:** 13083-803CF7A80  \n- **First seen:** 2022-09-02 21:41:00  \n- **Last seen:** 2022-09-14 02:19:00  \n- **Incoming transactions:** 3 (total USD 12,241,821.23)  \n- **Outgoing transactions:** 2 (total USD 12,395,895.35)  \n- **Unique senders:** 2, **unique receivers:** 1  \n- **Pass‑through ratio:** 0.9876 (99.76 % of inbound funds forwarded) – percentile 99.7 %  \n- **Rapid forwarding (24 h):** 0.9999 – percentile 97.4 %  \n- **Linkage to reported counterparties:** 1 reported counter‑party (ID 2824-805DFF260) with 1 transfer  \n\n## Evidence\n- **Transaction summary** – 2 inbound ACH transfers (USD 12,240,548.62) and 2 inbound credit‑card transfers (USD 1,272.60); 2 outbound ACH transfers (USD 12,395,895.35).  \n- **Recent transfers** – Large outbound ACH transfers on 2022‑09‑14 (USD 155,346.87 and USD 12,240,548.48) and inbound ACH transfer on 2022‑09‑13 (USD 12,240,548.62).  \n- **Fan‑in / fan‑out (48 h):** 1 each, percentiles 21.4 % and 34.9 % respectively.  \n- **Reported counterparties:** 1 counter‑party flagged in NCRP (ID 2824-805DFF260).  \n\n## Patterns matched\n- **pass_through** – Most money received is sent on.  \n- **rapid_forwarding** – Money forwarded within 24 hours of arrival.  \n- **linkage** – Transfers with an account already reported on NCRP.  \n\n## Red flags and SOP basis\n| Red flag | Description (from evidence) | SOP / regulatory basis |\n|----------|-----------------------------|------------------------|\n| Pass‑through behavior | Pass‑through ratio 0.9876 (99.76 % of inbound funds forwarded) exceeds the **pass_through_min** of 0.8 and is in the 99.7 th percentile. | The bank must place a Temporary Debit Hold on a **Suspected Money Mule Account** [**SOP Annex III para 4 step 1**]. The definition of a suspected money‑mule transaction includes “being unusual for or disproportionate to the account holder's declared profile” [**SOP Annex III para 3 (Suspected Money Mule Transaction)**]. |\n| Rapid forwarding | Rapid‑forwarding metric 0.9999 (99.99 % of funds moved within 24 h) is above the 95 % top‑percentile threshold. | The hold is justified under the same provision to act on suspected money‑mule activity [**SOP Annex III para 4 step 1**] and the need to monitor large, atypical flows per the RBI monitoring guidance [**KYC-CB-2025 para 40**]. |\n| Linkage to reported counter‑party | Transfer(s) involving a counter‑party already reported on the NCRP (1 reported counter‑party, 1 transfer). | Linkage to a reported account is a specific indicator for suspected money‑mule activity [**SOP Annex III para 3 (Suspected Money Mule Transaction)**]; therefore a hold is warranted. |\n| Hold level justification | The typology recommends an **account‑level** hold. | Internal policy permits account‑level holds only in “exceptional circumstances” and as a “last resort” [**SOP Annex III para 6(ii)**]. The present signals satisfy that exception. |\n| Notification & removal process | Upon hold, the bank must notify the holder immediately and allow 20 days for explanation. | Notification requirement [**SOP Annex III para 4 step 2**]; removal timeline [**SOP Annex III para 5 step 3**]. |\n\n## Recommended hold level\n**account**\n\n## Confidence\n**high**",
+   "errors": [
+    "Number 99.76 is not in the evidence."
+   ]
+  },
+  {
+   "draft": 2,
+   "note": "## Account summary\n- **Account ID:** 13083-803CF7A80  \n- **First seen:** 2022-09-02 21:41:00  \n- **Last seen:** 2022-09-14 02:19:00  \n- **Incoming transactions:** 3 (total USD 12,241,821.23)  \n- **Outgoing transactions:** 2 (total USD 12,395,895.35)  \n- **Unique senders:** 2, **unique receivers:** 1  \n- **Pass‑through ratio:** 0.9876 (98.76 %) – percentile 99.7 %  \n- **Rapid forwarding (24 h):** 0.9999 (99.99 %) – percentile 97.4 %  \n- **Linkage to reported counterparties:** 1 reported counter‑party (ID 2824-805DFF260) with 1 transfer  \n\n## Evidence\n- **Transfer summary** – 2 inbound ACH transfers (USD 12,240,548.62) and 2 inbound credit‑card transfers (USD 1,272.60); 2 outbound ACH transfers (USD 12,395,895.35).  \n- **Recent transfers** – Outbound ACH on 2022‑09‑14: USD 155,346.87 and USD 12,240,548.48; inbound ACH on 2022‑09‑13: USD 12,240,548.62; inbound credit‑card transfers on 2022‑09‑09 and 2022‑09‑02: USD 636.30 each.  \n- **Fan‑in / fan‑out (48 h):** 1 each, percentiles 21.4 % and 34.9 % respectively.  \n- **Reported counterparties:** 1 counter‑party flagged in NCRP (ID 2824-805DFF260).  \n\n## Patterns matched\n- **pass_through** – Most money received is sent on.  \n- **rapid_forwarding** – Money forwarded within 24 hours of arrival.  \n- **linkage** – Transfers with an account already reported on NCRP.  \n\n## Red flags and SOP basis\n| Red flag | Evidence detail | SOP / regulatory basis |\n|----------|----------------|------------------------|\n| Pass‑through behavior | Pass‑through ratio 0.9876 (98.76 %) exceeds the **pass_through_min** of 0.8 and lies in the 99.7 th percentile. | The bank shall place a Temporary Debit Hold on a **Suspected Money Mule Account** [**SOP Annex III para 4 step 1**]. The definition of a suspected money‑mule transaction includes “being unusual for or disproportionate to the account holder's declared profile” [**SOP Annex III para 3 (Suspected Money Mule Transaction)**]. |\n| Rapid forwarding | Rapid‑forwarding metric 0.9999 (99.99 %) is above the **top_percentile** threshold of 95.0 % (percentile 97.4 %). | Holds are mandated for transactions meeting the suspected money‑mule indicators [**SOP Annex III para 4 step 1**] and are supported by the RBI’s guidance to monitor large, atypical flows [**KYC-CB-2025 para 40**]. |\n| Linkage to reported counter‑party | Transfer(s) involving a counter‑party already reported on the NCRP (1 reported counter‑party, 1 transfer). | Linkage to a reported account is a specific indicator for suspected money‑mule activity [**SOP Annex III para 3 (Suspected Money Mule Transaction)**]; therefore a hold is justified. |\n| Hold level justification | Typology recommends an **account‑level** hold. | Internal policy permits account‑level holds only in “exceptional circumstances” and as a “last resort” [**SOP Annex III para 6(ii)**]. The present signals satisfy that exception. |\n| Notification requirement | Upon hold, the bank must notify the holder immediately. | Notification must be given on putting the hold, via digital or physical mode [**SOP Annex III para 4 step 2**]. |\n| Removal procedure | The holder must be given time to explain the genuineness of the account. | The bank shall allow 20 days for the account holder to submit an explanation [**SOP Annex III para 5 step 3**]. |\n\n## Recommended hold level\n**account**\n\n## Confidence\n**high**",
+   "errors": []
+  }
+ ],
+ "drafts": 2,
+ "flagged": false,
+ "tokens": {
+  "input": 5626,
+  "output": 3292
+ },
+ "evidence": {
+  "account": {
+   "id": "13083-803CF7A80",
+   "first_seen": "2022-09-02 21:41:00",
+   "last_seen": "2022-09-14 02:19:00",
+   "n_tx_in": 3,
+   "n_tx_out": 2,
+   "n_senders": 2,
+   "n_receivers": 1,
+   "total_in_usd": 12241821.23,
+   "total_out_usd": 12395895.35,
+   "fan_in_48h": 1,
+   "fan_in_48h_pctl": 21.4,
+   "fan_out_48h": 1,
+   "fan_out_48h_pctl": 34.9,
+   "pass_through_ratio": 0.9876,
+   "pass_through_ratio_pctl": 99.7,
+   "rapid_forward_24h": 0.9999,
+   "rapid_forward_24h_pctl": 97.4,
+   "cycles_3_5": 0
+  },
+  "typology": {
+   "signals": [
+    {
+     "name": "pass_through",
+     "description": "Most money received is sent on",
+     "sop_indicator": "a",
+     "values": {
+      "pass_through_ratio": 0.9876,
+      "total_in_usd": 12241821.23,
+      "total_out_usd": 12395895.35
+     }
+    },
+    {
+     "name": "rapid_forwarding",
+     "description": "Money forwarded within 24 hours of arrival",
+     "sop_indicator": "a",
+     "values": {
+      "rapid_forward_24h": 0.9999,
+      "rapid_forward_24h_pctl": 97.4
+     }
+    },
+    {
+     "name": "linkage",
+     "description": "Transfers with accounts already reported on NCRP",
+     "sop_indicator": "b",
+     "values": {
+      "reported_counterparties": 1,
+      "transfers_with_reported": 1
+     }
+    }
+   ],
+   "n_signals": 3,
+   "n_rules": 6,
+   "thresholds": {
+    "top_percentile": 95.0,
+    "pass_through_min": 0.8,
+    "cycles_min": 1
+   },
+   "hold_level": "account",
+   "confidence": "high",
+   "anchor_clauses": [
+    "SOP Annex III para 4 step 1",
+    "SOP Annex III para 6(ii)",
+    "SOP Annex III para 4 step 2",
+    "SOP Annex III para 5 step 3",
+    "SOP Annex III para 3 (Suspected Money Mule Transaction)",
+    "KYC-CB-2025 para 40"
+   ]
+  },
+  "recent_transfers": [
+   {
+    "direction": "out",
+    "counterparty": "220541-8083C1550",
+    "ts": "2022-09-14T02:19:00Z",
+    "amount": 120269.55,
+    "currency": "UK Pound",
+    "amount_usd": 155346.87,
+    "format": "ACH"
+   },
+   {
+    "direction": "out",
+    "counterparty": "220541-8083C1550",
+    "ts": "2022-09-14T02:19:00Z",
+    "amount": 9476632.74,
+    "currency": "UK Pound",
+    "amount_usd": 12240548.48,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "2824-805DFF260",
+    "ts": "2022-09-13T18:11:00Z",
+    "amount": 10446084.19,
+    "currency": "Euro",
+    "amount_usd": 12240548.62,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "310351-803CF8C70",
+    "ts": "2022-09-09T19:14:00Z",
+    "amount": 543.02,
+    "currency": "Euro",
+    "amount_usd": 636.3,
+    "format": "Credit Card"
+   },
+   {
+    "direction": "in",
+    "counterparty": "310351-803CF8C70",
+    "ts": "2022-09-02T21:41:00Z",
+    "amount": 543.02,
+    "currency": "Euro",
+    "amount_usd": 636.3,
+    "format": "Credit Card"
+   }
+  ],
+  "transfer_summary": [
+   {
+    "direction": "in",
+    "format": "Credit Card",
+    "transfers": 2,
+    "amount_usd": 1272.6,
+    "counterparties": 1
+   },
+   {
+    "direction": "in",
+    "format": "ACH",
+    "transfers": 1,
+    "amount_usd": 12240548.62,
+    "counterparties": 1
+   },
+   {
+    "direction": "out",
+    "format": "ACH",
+    "transfers": 2,
+    "amount_usd": 12395895.35,
+    "counterparties": 1
+   }
+  ],
+  "cycles": [],
+  "reported_counterparties": [
+   {
+    "id": "2824-805DFF260",
+    "transfers": 1,
+    "amount_usd": 12240548.62
+   }
+  ]
+ },
+ "seconds": 55.5
+}

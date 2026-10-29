@@ -1,0 +1,218 @@
+{
+ "account_id": "23-80017F180",
+ "use_linkage": true,
+ "typology": {
+  "signals": [
+   {
+    "name": "collection",
+    "description": "Many distinct senders within 48 hours",
+    "sop_indicator": "a",
+    "values": {
+     "fan_in_48h": 5,
+     "fan_in_48h_pctl": 97.4
+    }
+   }
+  ],
+  "n_signals": 1,
+  "n_rules": 6,
+  "thresholds": {
+   "top_percentile": 95.0,
+   "pass_through_min": 0.8,
+   "cycles_min": 1
+  },
+  "hold_level": "transaction",
+  "confidence": "low",
+  "anchor_clauses": [
+   "SOP Annex III para 4 step 1",
+   "SOP Annex III para 4 step 2",
+   "SOP Annex III para 5 step 3",
+   "SOP Annex III para 3 (Suspected Money Mule Transaction)",
+   "KYC-CB-2025 para 40"
+  ]
+ },
+ "clauses": [
+  {
+   "id": "SOP Annex III para 4 step 1",
+   "title": "Procedure and Timeline for Temporary Debit Hold, step 1",
+   "text": "The bank shall place a Temporary Debit Hold on the Suspected Money Mule Transaction or, if the account is a Suspected Money Mule Account, on the entire account. Timeline: Immediately",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "SOP Annex III para 4 step 2",
+   "title": "Procedure and Timeline for Temporary Debit Hold, step 2",
+   "text": "The bank shall notify the account holder of the Temporary Debit Hold, stating reasons, the process for removal, and the concerned officer's contact details, through digital mode (if mobile number / e-mail is on record) or physical mode. Timeline: On putting the temporary debit hold, the bank shall immediately notify the account holder, if communicating through digital mode, otherwise by EOD of the next day.",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "SOP Annex III para 5 step 3",
+   "title": "Procedure and Timeline for Removal of Temporary Debit Hold, step 3",
+   "text": "The bank shall seek the explanation / justification on the genuineness of the transaction / account from the account holder. Timeline: The bank shall give 20 days’ time from the date of Temporary Debit Hold to the account holder for submission of the explanation / justification.",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "SOP Annex III para 3 (Suspected Money Mule Transaction)",
+   "title": "Definition: Suspected Money Mule Transaction",
+   "text": "“Suspected Money Mule Transaction” means a transaction of ₹1000 and above, flagged by the bank's transaction-monitoring systems (including AI / ML-based tools), as suspected to be proceeds of money mule activity or cyber-enabled financial fraud, based on indicators such as being unusual for or disproportionate to the account holder's declared profile; or having linkage to an account already reported as money mule or fraudulent.",
+   "source": "Draft RBI (KYC) Amendment Directions, 2026 (11 Sep 2026)"
+  },
+  {
+   "id": "KYC-CB-2025 para 40",
+   "title": "Transactions that need close monitoring",
+   "text": "40. Without prejudice to the generality of factors that call for close monitoring, the bank shall necessarily monitor the following types of transactions: (1) Large and complex transactions including RTGS transactions, and those with unusual patterns, inconsistent with the normal and expected activity of the customer, which have no apparent economic rationale or legitimate purpose. (2) Transactions which exceed the thresholds prescribed for specific categories of accounts. (3) High account turnover inconsistent with the size of the balance maintained. (4) Deposit of third-party cheques, drafts, etc. in the existing and newly opened accounts followed by cash withdrawals for large amounts. For ongoing due diligence, the bank may consider adopting appropriate innovations including artificial intelligence and machine learning (AI and ML) technologies to support effective monitoring.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  },
+  {
+   "id": "KYC-CB-2025 para 55",
+   "title": "Alerts for suspicious transactions",
+   "text": "55. To identify and report suspicious transactions effectively, the bank shall implement robust software that generates alerts when transactions are inconsistent with a customer's risk categorisation and updated profile.",
+   "source": "RBI (Commercial Banks - KYC) Directions, 2025 (updated 1 Oct 2026)"
+  }
+ ],
+ "errors": [
+  "Number 12 is not in the evidence.",
+  "Number 22 is not in the evidence."
+ ],
+ "error_log": [
+  {
+   "draft": 1,
+   "note": "## Account summary\n- **Account ID:** 23-80017F180  \n- **First seen:** 2022-09-05 23:56:00  \n- **Last seen:** 2022-09-08 18:16:00  \n- **Incoming transactions:** 6 (total USD 65,817.88)  \n- **Outgoing transactions:** 0 (total USD 0.0)  \n- **Distinct senders (48 h):** 5 (97.4 percentile)  \n\n## Evidence\n- **Fan‑in (48 h):** 5 senders, percentile 97.4 %【SOP Annex III para 4 step 1】  \n- **Fan‑out (48 h):** 0, percentile 0.0 %【SOP Annex III para 4 step 2】  \n- **Pass‑through ratio:** 0.0, percentile 0.0 %【SOP Annex III para 5 step 3】  \n- **Recent inbound ACH transfers (EUR → USD):**  \n  1. 12,134.11 EUR (USD 14,218.55) from 22-800062E20 on 2022‑09‑08 18:16 UTC  \n  2. 1,356.64 EUR (USD 1,589.69) from 23-8001665B0 on 2022‑09‑08 07:37 UTC  \n  3. 12,403.93 EUR (USD 14,534.72) from 23-8000FFF70 on 2022‑09‑07 12:44 UTC  \n  4. 15,993.10 EUR (USD 18,740.45) from 23-800176CF0 on 2022‑09‑06 23:16 UTC  \n  5. 3,777.06 EUR (USD 4,425.90) from 22-80027F7A0 on 2022‑09‑06 22:49 UTC  \n  6. 10,504.14 EUR (USD 12,308.58) from 11-8001BF230 on 2022‑09‑05 23:56 UTC【KYC-CB-2025 para 40】  \n\n## Patterns matched\n- **Signal:** *collection* – “Many distinct senders within 48 hours” (fan_in_48h = 5, fan_in_48h_pctl = 97.4)【SOP Annex III para 3 (Suspected Money Mule Transaction)】  \n\n## Red flags and SOP basis\n| Red flag (signal) | Description | SOP clause(s) supporting action |\n|-------------------|-------------|---------------------------------|\n| **collection** | High number of distinct senders in a short window (5 senders, 97.4 percentile) indicating possible collection activity. | • Temporary Debit Hold on suspected money‑mule activity【SOP Annex III para 4 step 1】  <br>• Notification to account holder about the hold【SOP Annex III para 4 step 2】  <br>• Requirement to seek explanation within 20 days【SOP Annex III para 5 step 3】  <br>• Definition of a suspected money‑mule transaction【SOP Annex III para 3 (Suspected Money Mule Transaction)】  <br>• Monitoring of unusual patterns per KYC guidelines【KYC-CB-2025 para 40】 |\n\n## Recommended hold level\n**Transaction**【SOP Annex III para 4 step 1】\n\n## Confidence\n**Low**【SOP Annex III para 5 step 3】",
+   "errors": [
+    "Number 12 is not in the evidence.",
+    "Number 22 is not in the evidence."
+   ]
+  },
+  {
+   "draft": 2,
+   "note": "## Account summary\n- **Account ID:** 23-80017F180  \n- **First seen:** 2022-09-05 23:56:00  \n- **Last seen:** 2022-09-08 18:16:00  \n- **Incoming transactions:** 6 (total USD 65,817.88)  \n- **Outgoing transactions:** 0 (total USD 0.0)  \n- **Distinct senders (48 h):** 5 (percentile 97.4)  \n\n## Evidence\n- **Fan‑in (48 h):** 5 senders, percentile 97.4 %【SOP Annex III para 4 step 1】  \n- **Fan‑out (48 h):** 0, percentile 0.0 %【SOP Annex III para 4 step 2】  \n- **Pass‑through ratio:** 0.0, percentile 0.0 %【SOP Annex III para 5 step 3】  \n- **Recent inbound ACH transfers:**  \n  1. 12,134.11 EUR (USD 14,218.55) from counterparty 22-800062E20 on 2022‑09‑08 18:16 UTC【KYC-CB-2025 para 40】  \n  2. 1,356.64 EUR (USD 1,589.69) from counterparty 23-8001665B0 on 2022‑09‑08 07:37 UTC【KYC-CB-2025 para 40】  \n  3. 12,403.93 EUR (USD 14,534.72) from counterparty 23-8000FFF70 on 2022‑09‑07 12:44 UTC【KYC-CB-2025 para 40】  \n  4. 15,993.10 EUR (USD 18,740.45) from counterparty 23-800176CF0 on 2022‑09‑06 23:16 UTC【KYC-CB-2025 para 40】  \n  5. 3,777.06 EUR (USD 4,425.90) from counterparty 22-80027F7A0 on 2022‑09‑06 22:49 UTC【KYC-CB-2025 para 40】  \n  6. 10,504.14 EUR (USD 12,308.58) from counterparty 11-8001BF230 on 2022‑09‑05 23:56 UTC【KYC-CB-2025 para 40】  \n\n## Patterns matched\n- **Signal – collection:** “Many distinct senders within 48 hours” (fan_in_48h = 5, fan_in_48h_pctl = 97.4)【SOP Annex III para 3 (Suspected Money Mule Transaction)】  \n\n## Red flags and SOP basis\n| Red flag (signal) | Description | SOP clause(s) |\n|-------------------|-------------|---------------|\n| **collection** | High number of distinct senders in a short window (5 senders, 97.4 percentile) indicating possible collection activity. | • Temporary Debit Hold on suspected money‑mule activity【SOP Annex III para 4 step 1】  <br>• Notify account holder of the hold【SOP Annex III para 4 step 2】  <br>• Seek explanation / justification within 20 days【SOP Annex III para 5 step 3】  <br>• Definition of a suspected money‑mule transaction【SOP Annex III para 3 (Suspected Money Mule Transaction)】  <br>• Monitoring of unusual patterns per KYC guidelines【KYC-CB-2025 para 40】 |\n\n## Recommended hold level\n**Transaction**【SOP Annex III para 4 step 1】\n\n## Confidence\n**Low**【SOP Annex III para 5 step 3】",
+   "errors": [
+    "Number 12 is not in the evidence.",
+    "Number 22 is not in the evidence."
+   ]
+  }
+ ],
+ "drafts": 2,
+ "flagged": true,
+ "tokens": {
+  "input": 4600,
+  "output": 3387
+ },
+ "evidence": {
+  "account": {
+   "id": "23-80017F180",
+   "first_seen": "2022-09-05 23:56:00",
+   "last_seen": "2022-09-08 18:16:00",
+   "n_tx_in": 6,
+   "n_tx_out": 0,
+   "n_senders": 6,
+   "n_receivers": 0,
+   "total_in_usd": 65817.88,
+   "total_out_usd": 0.0,
+   "fan_in_48h": 5,
+   "fan_in_48h_pctl": 97.4,
+   "fan_out_48h": 0,
+   "fan_out_48h_pctl": 0.0,
+   "pass_through_ratio": 0.0,
+   "pass_through_ratio_pctl": 0.0,
+   "rapid_forward_24h": 0.0,
+   "rapid_forward_24h_pctl": 0.0,
+   "cycles_3_5": 0
+  },
+  "typology": {
+   "signals": [
+    {
+     "name": "collection",
+     "description": "Many distinct senders within 48 hours",
+     "sop_indicator": "a",
+     "values": {
+      "fan_in_48h": 5,
+      "fan_in_48h_pctl": 97.4
+     }
+    }
+   ],
+   "n_signals": 1,
+   "n_rules": 6,
+   "thresholds": {
+    "top_percentile": 95.0,
+    "pass_through_min": 0.8,
+    "cycles_min": 1
+   },
+   "hold_level": "transaction",
+   "confidence": "low",
+   "anchor_clauses": [
+    "SOP Annex III para 4 step 1",
+    "SOP Annex III para 4 step 2",
+    "SOP Annex III para 5 step 3",
+    "SOP Annex III para 3 (Suspected Money Mule Transaction)",
+    "KYC-CB-2025 para 40"
+   ]
+  },
+  "recent_transfers": [
+   {
+    "direction": "in",
+    "counterparty": "22-800062E20",
+    "ts": "2022-09-08T18:16:00Z",
+    "amount": 12134.11,
+    "currency": "Euro",
+    "amount_usd": 14218.55,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "23-8001665B0",
+    "ts": "2022-09-08T07:37:00Z",
+    "amount": 1356.64,
+    "currency": "Euro",
+    "amount_usd": 1589.69,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "23-8000FFF70",
+    "ts": "2022-09-07T12:44:00Z",
+    "amount": 12403.93,
+    "currency": "Euro",
+    "amount_usd": 14534.72,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "23-800176CF0",
+    "ts": "2022-09-06T23:16:00Z",
+    "amount": 15993.1,
+    "currency": "Euro",
+    "amount_usd": 18740.45,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "22-80027F7A0",
+    "ts": "2022-09-06T22:49:00Z",
+    "amount": 3777.06,
+    "currency": "Euro",
+    "amount_usd": 4425.9,
+    "format": "ACH"
+   },
+   {
+    "direction": "in",
+    "counterparty": "11-8001BF230",
+    "ts": "2022-09-05T23:56:00Z",
+    "amount": 10504.14,
+    "currency": "Euro",
+    "amount_usd": 12308.58,
+    "format": "ACH"
+   }
+  ],
+  "transfer_summary": [
+   {
+    "direction": "in",
+    "format": "ACH",
+    "transfers": 6,
+    "amount_usd": 65817.88,
+    "counterparties": 6
+   }
+  ],
+  "cycles": [],
+  "reported_counterparties": []
+ },
+ "seconds": 19.1
+}
