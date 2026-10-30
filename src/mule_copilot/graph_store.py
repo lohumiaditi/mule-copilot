@@ -6,6 +6,8 @@ go in. Ground-truth labels stay on disk.
     python -m mule_copilot.graph_store   # (re)load the graph
 """
 
+from functools import cache
+
 import pandas as pd
 from neo4j import GraphDatabase
 
@@ -14,7 +16,9 @@ from mule_copilot import config
 BATCH = 5000
 
 
+@cache
 def driver():
+    """One driver (a connection pool) for the whole process, shared by every query."""
     return GraphDatabase.driver(config.NEO4J_URI, auth=(config.NEO4J_USER, config.NEO4J_PASSWORD))
 
 
@@ -30,8 +34,9 @@ def load(feats, tx, reported_ids=()):
     transfers = tx[["src", "dst", "ts", "amount_paid", "currency_paid", "amount_received",
                     "currency_received", "amount_usd", "payment_format"]].to_dict("records")
 
-    with driver() as d, d.session() as s:
-        s.run("MATCH (n) CALL (n) { DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS")
+    with driver().session() as s:
+        # Only this project's accounts (and their transfers): never anything else in the database.
+        s.run("MATCH (n:Account) CALL (n) { DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS")
         s.run("CREATE CONSTRAINT account_id IF NOT EXISTS FOR (a:Account) REQUIRE a.id IS UNIQUE")
         for batch in _batches(accounts):
             s.run("UNWIND $rows AS row MERGE (a:Account {id: row.id}) SET a += row", rows=batch)
@@ -55,8 +60,7 @@ def load(feats, tx, reported_ids=()):
 # --- Fixed queries used by the agent's evidence step -------------------------------
 
 def account(account_id):
-    with driver() as d:
-        records, _, _ = d.execute_query("MATCH (a:Account {id: $id}) RETURN properties(a) AS p", id=account_id)
+    records, _, _ = driver().execute_query("MATCH (a:Account {id: $id}) RETURN properties(a) AS p", id=account_id)
     return records[0]["p"] if records else None
 
 
@@ -70,8 +74,7 @@ def transfers(account_id, limit=50):
                t.currency_paid AS currency, round(t.amount_usd, 2) AS amount_usd, t.payment_format AS format
         ORDER BY t.ts DESC LIMIT $limit
     """
-    with driver() as d:
-        records, _, _ = d.execute_query(query, id=account_id, limit=limit)
+    records, _, _ = driver().execute_query(query, id=account_id, limit=limit)
     return [r.data() for r in records]
 
 
@@ -85,8 +88,7 @@ def transfer_summary(account_id):
                round(sum(t.amount_usd), 2) AS amount_usd, count(DISTINCT other) AS counterparties
         ORDER BY direction, transfers DESC
     """
-    with driver() as d:
-        records, _, _ = d.execute_query(query, id=account_id)
+    records, _, _ = driver().execute_query(query, id=account_id)
     return [r.data() for r in records]
 
 
@@ -100,22 +102,7 @@ def counterparties(account_id, limit=60):
                round(sum(t.amount_usd), 2) AS amount_usd
         ORDER BY amount_usd DESC LIMIT $limit
     """
-    with driver() as d:
-        records, _, _ = d.execute_query(query, id=account_id, limit=limit)
-    return [r.data() for r in records]
-
-
-def community_peers(account_id, limit=25):
-    """Other in-scope accounts in the same Louvain community, busiest first."""
-    query = """
-        MATCH (a:Account {id: $id}), (p:Account {community_id: a.community_id})
-        WHERE p <> a AND p.in_scope
-        RETURN p.id AS id, p.fan_in_48h AS fan_in_48h, p.fan_out_48h AS fan_out_48h,
-               p.pass_through_ratio AS pass_through_ratio, p.cycles_3_5 AS cycles_3_5
-        ORDER BY p.n_tx_in + p.n_tx_out DESC LIMIT $limit
-    """
-    with driver() as d:
-        records, _, _ = d.execute_query(query, id=account_id, limit=limit)
+    records, _, _ = driver().execute_query(query, id=account_id, limit=limit)
     return [r.data() for r in records]
 
 
@@ -126,8 +113,7 @@ def cycle_paths(account_id, limit=5):
         WHERE all(n IN nodes(path)[1..-1] WHERE n <> a)
         RETURN DISTINCT [n IN nodes(path) | n.id] AS accounts LIMIT $limit
     """
-    with driver() as d:
-        records, _, _ = d.execute_query(query, id=account_id, limit=limit)
+    records, _, _ = driver().execute_query(query, id=account_id, limit=limit)
     return [r["accounts"] for r in records]
 
 
@@ -139,8 +125,7 @@ def reported_links(account_id, limit=10):
         RETURN r.id AS id, count(t) AS transfers, round(sum(t.amount_usd), 2) AS amount_usd
         ORDER BY transfers DESC LIMIT $limit
     """
-    with driver() as d:
-        records, _, _ = d.execute_query(query, id=account_id, limit=limit)
+    records, _, _ = driver().execute_query(query, id=account_id, limit=limit)
     return [r.data() for r in records]
 
 

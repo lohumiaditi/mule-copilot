@@ -141,6 +141,12 @@ powershell -ExecutionPolicy Bypass -File scripts\neo4j.ps1 start
 .venv\Scripts\python -m mule_copilot.agent 223-811EDA940 --note-only --no-linkage   # note only (evals)
 ```
 
+An account's existing case is never overwritten by accident, because its record must be kept (SOP
+para 7). Pass `--replace` on the command line, or tick "Replace an existing case" on the screen, to
+start over on purpose. A case that stops part-way (for example on a Groq rate limit) shows the
+error and a Retry button, which reruns the unfinished step from its checkpoint. The screen is served
+to this machine only (`.streamlit/config.toml`), as is Neo4j under Docker.
+
 Notes land in `data/processed/notes/<account>.md`, with a `.json` beside each holding the evidence,
 cited clauses, every draft and its verifier errors and the time taken. The MIS log is
 `data/processed/mis.sqlite`; LangGraph checkpoints are in `data/processed/checkpoints.sqlite`.
@@ -277,8 +283,10 @@ intake → evidence → typology → retrieve → draft → verify → officer r
   and to cite only the clauses it was given. Sections: account summary, evidence, patterns matched,
   red flags and SOP basis, recommended hold level, confidence.
 - **Verifier** (plain code): every number in the note must appear in the evidence or the cited
-  clauses (rounding and ratio-as-percentage allowed); every `[clause ID]` must exist; at least one
-  must be cited. A failing draft goes back once with the errors, then is flagged to the officer.
+  clauses (rounding allowed; a ratio may be written as a percentage only with a % sign); dates and
+  times must match the evidence as whole values, so a wrong count cannot pass because it equals an
+  hour or a day; every `[clause ID]` must exist; at least one must be cited. A failing draft goes
+  back once with the errors, then is flagged to the officer.
   Example catch: a first draft summed several transfers into "≈ USD 115,000", a number in no record.
 - **Officer review**: LangGraph `interrupt()`; the officer approves, edits or rejects, and the
   decision is stored with the case.

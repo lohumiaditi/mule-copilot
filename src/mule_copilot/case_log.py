@@ -28,11 +28,17 @@ CASE_FIELDS = {"account_id", "opened_on", "stage", "hold_level", "hold_date", "e
                "reference_date", "release_on", "closed_on", "outcome"}
 
 
+_ready = set()   # databases whose tables this process has already created
+
+
 def _connect():
-    config.MIS_DB.parent.mkdir(parents=True, exist_ok=True)
+    if config.MIS_DB not in _ready:
+        config.MIS_DB.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(config.MIS_DB)
     conn.row_factory = sqlite3.Row
-    conn.executescript(SCHEMA)
+    if config.MIS_DB not in _ready:
+        conn.executescript(SCHEMA)
+        _ready.add(config.MIS_DB)
     return conn
 
 

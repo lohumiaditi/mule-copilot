@@ -3,6 +3,8 @@
 # its lazy model modules on each rerun. Restart the app to pick up code changes instead.
 fileWatcherType = "none"
 headless = true
+# The screen can approve notes and place holds and has no login: serve it to this machine only.
+address = "localhost"
 
 [browser]
 gatherUsageStats = false

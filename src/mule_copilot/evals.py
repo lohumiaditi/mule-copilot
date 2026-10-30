@@ -98,7 +98,7 @@ def notes():
     for r in _eval_set().itertuples():
         if (NOTES / f"{r.account_id}.json").exists():
             continue
-        if _with_rate_limit_waits(lambda: agent.open_case(r.account_id, CASE_DATE, use_linkage=True), r.account_id) is None \
+        if _with_rate_limit_waits(lambda: agent.open_case(r.account_id, CASE_DATE, use_linkage=True, replace=True), r.account_id) is None \
                 and not (NOTES / f"{r.account_id}.json").exists():
             continue
         record = json.loads((NOTES / f"{r.account_id}.json").read_text(encoding="utf-8"))
@@ -144,14 +144,15 @@ def _final_note(record):
     return record["error_log"][-1]["note"]
 
 
+HOLD_WORDS = {"none": r"\bnone\b|\bno (temporary debit )?hold", "transaction": r"transaction", "account": r"account"}
+
+
 def stated_hold(note):
-    """The hold level the note's own 'Recommended hold level' section states."""
+    """The hold level the note's own 'Recommended hold level' section states: the first one it
+    names, so "Account-level hold (no hold on amounts alone)" reads as account."""
     section = note.split("Recommended hold level", 1)[-1].split("##", 1)[0].lower()
-    if re.search(r"\bnone\b|no (temporary debit )?hold", section):
-        return "none"
-    if "transaction" in section:
-        return "transaction"
-    return "account" if "account" in section else "unclear"
+    found = {level: m.start() for level, pattern in HOLD_WORDS.items() if (m := re.search(pattern, section))}
+    return min(found, key=found.get) if found else "unclear"
 
 
 def sheets():

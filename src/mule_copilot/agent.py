@@ -212,8 +212,9 @@ def draft(state):
                       + "\nRewrite the whole note and fix every problem.")]
     reply = chat().invoke(messages)
     usage = reply.usage_metadata or {}
-    tokens = {"input": state["tokens"]["input"] + usage.get("input_tokens", 0),
-              "output": state["tokens"]["output"] + usage.get("output_tokens", 0)}
+    spent = state.get("tokens") or {"input": 0, "output": 0}   # cases checkpointed before token counting
+    tokens = {"input": spent["input"] + usage.get("input_tokens", 0),
+              "output": spent["output"] + usage.get("output_tokens", 0)}
     return {"note": reply.content.strip(), "drafts": state["drafts"] + 1, "tokens": tokens}
 
 
@@ -441,8 +442,17 @@ def state(account_id):
     return graph().get_state(_thread(account_id)).values
 
 
-def open_case(account_id, day, use_linkage=True):
-    """Start (or restart) a case and run it to the officer's note review."""
+def open_case(account_id, day, use_linkage=True, replace=False):
+    """Start a case and run it to the officer's note review.
+
+    An existing case is never overwritten by accident: its MIS record must be kept (SOP
+    para 7). Only a case that failed in its first step, or an explicit replace=True,
+    starts over.
+    """
+    existing = case_log.case(account_id)
+    if existing and existing["stage"] != "investigation" and not replace:
+        raise ValueError(f"Account {account_id} already has a case ({existing['stage']}). "
+                         "Its record is kept; replace it only on purpose.")
     graph().checkpointer.delete_thread(account_id)
     case_log.reset(account_id)
     start = time.time()
@@ -453,6 +463,18 @@ def open_case(account_id, day, use_linkage=True):
 
 def resume(account_id, reply):
     graph().invoke(Command(resume=reply), _thread(account_id))
+    return pending(account_id)
+
+
+def stopped(account_id):
+    """The error of a step that failed (e.g. a Groq rate limit), or None."""
+    tasks = graph().get_state(_thread(account_id)).tasks
+    return next((t.error for t in tasks if t.error), None)
+
+
+def retry(account_id):
+    """Run a case's failed step again from its last checkpoint; finished steps are not repeated."""
+    graph().invoke(None, _thread(account_id))
     return pending(account_id)
 
 
@@ -522,13 +544,14 @@ def main():
     parser.add_argument("account_id")
     parser.add_argument("--date", default=date.today().isoformat(), help="case date the flag arrives on")
     parser.add_argument("--no-linkage", action="store_true")
+    parser.add_argument("--replace", action="store_true", help="start over, deleting an existing case's record")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--auto", action="store_true")
     mode.add_argument("--note-only", action="store_true")
     args = parser.parse_args()
 
     start = time.time()
-    payload = open_case(args.account_id, args.date, use_linkage=not args.no_linkage)
+    payload = open_case(args.account_id, args.date, use_linkage=not args.no_linkage, replace=args.replace)
     s = state(args.account_id)
     print((NOTES_DIR / f"{args.account_id}.md").read_text(encoding="utf-8"))
     t = s["typology"]

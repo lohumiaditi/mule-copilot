@@ -16,7 +16,6 @@ dependencies = [
     "langchain-groq>=0.3",
     "chromadb>=1.0",
     "sentence-transformers>=3.0",
-    "pypdf>=5.0",
     "beautifulsoup4>=4.12",
     "langgraph-checkpoint-sqlite>=2.0",
     # Day 3: interface

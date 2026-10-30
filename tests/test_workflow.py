@@ -45,6 +45,7 @@ def run(tmp_path, monkeypatch):
         interrupts = [i for task in snapshot.tasks for i in task.interrupts]
         return interrupts[0].value["stage"] if interrupts else None
 
+    step.graph, step.thread = graph, thread
     return step
 
 
@@ -90,6 +91,44 @@ def test_late_decision_and_lea_instruction_are_logged(run):
     steps = _steps()
     assert ("2026-12-05", "Decision taken after the SOP deadline") in steps
     assert case_log.case(ACCOUNT["id"])["outcome"] == "Acted on LEA instruction: Freeze until further orders"
+
+
+def test_a_failed_step_can_be_retried_without_repeating_finished_steps(run, monkeypatch):
+    calls = []
+
+    def flaky_draft(kind, ctx):
+        calls.append(kind)
+        if len(calls) == 1:
+            raise RuntimeError("Groq rate limit")
+        return f"{kind} draft", [], []
+
+    monkeypatch.setattr(documents, "draft", flaky_draft)
+    run({"account_id": ACCOUNT["id"], "date": "2026-11-02"})
+    with pytest.raises(RuntimeError):
+        run(Command(resume={"action": "approve", "date": "2026-11-02"}))
+    tasks = run.graph.get_state(run.thread).tasks
+    assert ["Groq rate limit" in str(t.error) for t in tasks if t.error] == [True]
+
+    assert run(None) == "awaiting_explanation"   # what agent.retry does
+    assert [s for _, s in _steps()].count("Temporary debit hold placed") == 1
+    assert [d["kind"] for d in case_log.documents(ACCOUNT["id"])] == ["case_note", "customer_notice"]
+
+
+def test_open_case_refuses_to_overwrite_an_existing_case(tmp_path, monkeypatch):
+    monkeypatch.setattr(config, "MIS_DB", tmp_path / "mis.sqlite")
+    case_log.update_case("1-80000000A", account_id="1-80000000A", stage="awaiting_explanation")
+    case_log.log("1-80000000A", "2026-11-02", "Temporary debit hold placed", "system")
+    with pytest.raises(ValueError, match="already has a case"):
+        agent.open_case("1-80000000A", "2026-11-03")
+    assert len(case_log.events("1-80000000A")) == 1   # record untouched
+
+
+def test_draft_resumes_a_case_saved_before_token_counting(monkeypatch):
+    reply = SimpleNamespace(content="note", usage_metadata={"input_tokens": 10, "output_tokens": 5})
+    monkeypatch.setattr(agent, "chat", lambda: SimpleNamespace(invoke=lambda messages: reply))
+    old_state = {"facts": {}, "typology": {}, "transfers": [], "summary": [], "cycles": [], "reported": [],
+                 "clauses": [], "drafts": 0}   # no "tokens" key, as in checkpoints from 21 Oct
+    assert agent.draft(old_state)["tokens"] == {"input": 10, "output": 5}
 
 
 def test_rejected_note_closes_without_a_hold(run):
