@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Mule Copilot: Runtime Architecture",
+    "locale": "en",
+    "output": ".archify/architecture-mule-copilot-runtime-20261030-124223/mule-copilot-runtime.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/lohumiaditi/mule-copilot.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "cd7369cfbe2a5fdb13f8e688f417913ab0492a8c"
+    }
+  },
+  "components": [
+    {
+      "id": "officer", "type": "external", "label": "Officer", "sublabel": "investigator, decides",
+      "pos": [40, 230], "size": [120, 64],
+      "sources": [
+        { "path": "src/mule_copilot/app.py", "line": 157, "end_line": 166, "label": "review panel" },
+        { "path": "src/mule_copilot/agent.py", "line": 234, "end_line": 244, "label": "review pause" }
+      ]
+    },
+    {
+      "id": "ui", "type": "frontend", "label": "Streamlit screen", "sublabel": "case queue, actions",
+      "pos": [260, 230], "size": [140, 64],
+      "sources": [
+        { "path": "src/mule_copilot/app.py", "line": 101, "end_line": 105, "label": "open_case" },
+        { "path": "src/mule_copilot/app.py", "line": 151, "end_line": 154, "label": "resume" }
+      ]
+    },
+    {
+      "id": "workflow", "type": "backend", "label": "LangGraph workflow", "sublabel": "one graph per case",
+      "tag": "5 human pauses",
+      "pos": [500, 222], "size": [170, 80],
+      "sources": [
+        { "path": "src/mule_copilot/agent.py", "line": 405, "end_line": 420, "label": "graph" },
+        { "path": "src/mule_copilot/agent.py", "line": 444, "end_line": 456, "label": "open_case, resume" },
+        { "path": "src/mule_copilot/agent.py", "line": 175, "end_line": 198, "label": "evidence, rules, retrieval" }
+      ]
+    },
+    {
+      "id": "typology", "type": "backend", "label": "Typology rules", "sublabel": "decide hold level",
+      "pos": [430, 50], "size": [140, 64],
+      "sources": [
+        { "path": "src/mule_copilot/typology.py", "line": 43, "end_line": 71, "label": "score" },
+        { "path": "src/mule_copilot/agent.py", "line": 185, "end_line": 186, "label": "called by workflow" }
+      ]
+    },
+    {
+      "id": "verifier", "type": "security", "label": "Verifier", "sublabel": "numbers, citations, hold",
+      "pos": [600, 50], "size": [140, 64],
+      "sources": [
+        { "path": "src/mule_copilot/verifier.py", "line": 75, "end_line": 93, "label": "check" },
+        { "path": "src/mule_copilot/verifier.py", "line": 99, "end_line": 104, "label": "hold-level check" },
+        { "path": "src/mule_copilot/agent.py", "line": 220, "end_line": 225, "label": "verify step" }
+      ]
+    },
+    {
+      "id": "drafter", "type": "backend", "label": "LLM drafting", "sublabel": "note, notices, assessor",
+      "pos": [782, 230], "size": [150, 64],
+      "sources": [
+        { "path": "src/mule_copilot/agent.py", "line": 206, "end_line": 217, "label": "case note" },
+        { "path": "src/mule_copilot/documents.py", "line": 83, "end_line": 101, "label": "notices, police ref, STR" },
+        { "path": "src/mule_copilot/assessor.py", "line": 39, "end_line": 46, "label": "explanation assessor" }
+      ]
+    },
+    {
+      "id": "groq", "type": "external", "label": "Groq API", "sublabel": "gpt-oss-120b",
+      "pos": [1032, 230], "size": [140, 64],
+      "sources": [
+        { "path": "src/mule_copilot/llm.py", "line": 6, "end_line": 7, "label": "ChatGroq client" },
+        { "path": "src/mule_copilot/config.py", "line": 32, "end_line": 32, "label": "model" }
+      ]
+    },
+    {
+      "id": "neo4j", "type": "database", "label": "Neo4j", "sublabel": "transfer graph, bolt",
+      "pos": [360, 400], "size": [140, 64],
+      "sources": [
+        { "path": "src/mule_copilot/graph_store.py", "line": 17, "end_line": 18, "label": "driver" },
+        { "path": "src/mule_copilot/config.py", "line": 28, "end_line": 30, "label": "localhost URI" },
+        { "path": "scripts/neo4j.ps1", "line": 71, "end_line": 72, "label": "local server" }
+      ]
+    },
+    {
+      "id": "chroma", "type": "database", "label": "Chroma", "sublabel": "RBI clause index",
+      "pos": [515, 400], "size": [140, 64],
+      "sources": [
+        { "path": "src/mule_copilot/corpus.py", "line": 166, "end_line": 170, "label": "local store" },
+        { "path": "src/mule_copilot/corpus.py", "line": 200, "end_line": 205, "label": "search" },
+        { "path": "src/mule_copilot/agent.py", "line": 189, "end_line": 198, "label": "retrieve step" }
+      ]
+    },
+    {
+      "id": "sqlite", "type": "database", "label": "SQLite", "sublabel": "MIS log, checkpoints",
+      "pos": [670, 400], "size": [150, 64],
+      "sources": [
+        { "path": "src/mule_copilot/case_log.py", "line": 31, "end_line": 36, "label": "MIS connection" },
+        { "path": "src/mule_copilot/case_log.py", "line": 52, "end_line": 55, "label": "event log" },
+        { "path": "src/mule_copilot/agent.py", "line": 423, "end_line": 426, "label": "checkpointer" }
+      ]
+    }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "This machine (local process and stores)", "wraps": ["ui", "workflow", "typology", "verifier", "drafter", "neo4j", "chroma", "sqlite"] },
+    { "kind": "security-group", "label": "Deterministic controls", "wraps": ["typology", "verifier"] }
+  ],
+  "connections": [
+    { "id": "officer-ui", "from": "officer", "to": "ui", "label": "decides", "variant": "emphasis" },
+    { "id": "ui-workflow", "from": "ui", "to": "workflow", "label": "run, resume", "variant": "emphasis" },
+    { "id": "workflow-drafter", "from": "workflow", "to": "drafter", "label": "facts, clauses", "variant": "emphasis" },
+    { "id": "drafter-groq", "from": "drafter", "to": "groq", "label": "HTTPS", "variant": "emphasis" },
+    { "id": "workflow-typology", "from": "workflow", "to": "typology", "label": "facts" },
+    { "id": "workflow-verifier", "from": "workflow", "to": "verifier", "label": "check draft", "variant": "security" },
+    { "id": "workflow-neo4j", "from": "workflow", "to": "neo4j", "label": "fixed Cypher" },
+    { "id": "workflow-chroma", "from": "workflow", "to": "chroma", "label": "clause search" },
+    { "id": "workflow-sqlite", "from": "workflow", "to": "sqlite", "label": "log, checkpoint" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Primary path",
+      "items": [
+        "Officer opens a flagged account; the workflow gathers evidence, scores it, retrieves clauses and drafts",
+        "A draft failing verification goes back to the LLM once, then is flagged to the officer",
+        "The case pauses for the officer, customer and police; the SQLite checkpoint lets it resume days later"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Trust boundaries",
+      "items": [
+        "Rules, not the LLM, set the hold level; the prompt forbids changing it and the verifier checks it",
+        "Evidence and clause text leave the machine for Groq over HTTPS; synthetic data only",
+        "Customer documents are also checked for any mention of an STR or FIU-IND",
+        "Groq key from .env, kept out of git; the officer approves every action"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Also in the code",
+      "items": [
+        "Streamlit reads the MIS log and Neo4j directly for the queue and the graph view",
+        "documents.py runs the same verifier on notices, police reference and STR",
+        "SOP clock (clock.py) turns case dates into the 20, 10, 30 and 60-day deadlines"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Build-time dependencies",
+      "items": [
+        "Kaggle IBM AML data, loaded into Neo4j by ingest, features and graph_store",
+        "rbi.org.in pages split into clauses by corpus.py",
+        "Hugging Face bge-small embeddings, cached locally after first use"
+      ]
+    }
+  ]
+}

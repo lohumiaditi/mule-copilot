@@ -55,6 +55,16 @@ What the numbers say:
 
 ## Architecture
 
+![Runtime architecture: officer, Streamlit, LangGraph workflow, LLM drafting and Groq on the primary path; typology rules and verifier as deterministic controls; Neo4j, Chroma and SQLite as local stores](docs/runtime-architecture.png)
+
+Runtime view, every component linked to its source lines at a pinned commit. Interactive version
+(download and open in a browser):
+[`mule-copilot-runtime.html`](.archify/architecture-mule-copilot-runtime-20261030-124223/mule-copilot-runtime.html),
+built with [Archify](https://github.com/tt-a1i/archify) from
+[`candidate.json`](.archify/architecture-mule-copilot-runtime-20261030-124223/candidate.json).
+
+Case workflow, one per flag:
+
 ```mermaid
 flowchart LR
     subgraph data[Data, built once]

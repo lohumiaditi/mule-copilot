@@ -11,3 +11,8 @@ data/processed/
 chroma/
 *.sqlite
 *.log
+
+# Archify receipts and captures embed absolute local paths; keep only the candidate and HTML
+.archify/**/*.json
+!.archify/**/candidate.json
+.archify/**/visual-check/
